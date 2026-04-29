@@ -10,7 +10,7 @@ const PostLatest = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:4000/posts")
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`)
       .then((response) => response.json())
       .then((data) => {
         setPostData(data);

@@ -20,7 +20,7 @@ const AdminUsers = () => {
   // Fetch Users
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:4000/users")
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/users`)
       .then((response) => {
         if (!response.ok) throw new Error("response was not ok");
         return response.json();
@@ -40,7 +40,7 @@ const AdminUsers = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const response = await fetch(`http://localhost:4000/users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -56,7 +56,7 @@ const AdminUsers = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const response = await fetch(`http://localhost:4000/users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

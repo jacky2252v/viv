@@ -19,7 +19,7 @@ const AdminPosts = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:4000/posts")
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -40,7 +40,7 @@ const AdminPosts = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const response = await fetch(`http://localhost:4000/posts/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -61,7 +61,7 @@ const AdminPosts = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/posts", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -86,7 +86,7 @@ const AdminPosts = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/posts/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

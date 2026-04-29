@@ -30,7 +30,7 @@ function SignUpForm() {
         }
 
         try {
-            const response = await fetch('http://localhost:4000/users', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ const PostDetail = () => {
   }, [postData]);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/posts/${id}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setPostData(data);
