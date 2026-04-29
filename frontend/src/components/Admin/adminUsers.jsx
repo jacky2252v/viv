@@ -40,10 +40,13 @@ const AdminUsers = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/users/${id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       if (response.ok) {
         setUserData(userData.filter((user) => user._id !== id));
@@ -56,14 +59,17 @@ const AdminUsers = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/users/${id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+          }),
+        },
+      );
       const result = await response.json();
       setUserData(userData.map((user) => (user._id === id ? result : user)));
       console.log("Success:", result);

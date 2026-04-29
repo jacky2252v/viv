@@ -40,10 +40,13 @@ const AdminPosts = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       if (response.ok) {
         setPostData(postData.filter((post) => post._id !== id));
@@ -61,14 +64,17 @@ const AdminPosts = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title,
-          description: description,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/posts`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: title,
+            description: description,
+          }),
+        },
+      );
       const result = await response.json();
       setPostData([...(postData || []), result]);
       setTitle("");
@@ -86,14 +92,17 @@ const AdminPosts = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title,
-          description: description,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/posts/${id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: title,
+            description: description,
+          }),
+        },
+      );
       const result = await response.json();
       setPostData(postData.map((post) => (post._id === id ? result : post)));
       console.log("Success:", result);
