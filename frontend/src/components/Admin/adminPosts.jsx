@@ -1,36 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
+import "./styles/AdminPosts.css";
 
 const AdminPosts = () => {
   const navigate = useNavigate();
-  const handleClick = (evt) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [postData, setPostData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleBack = (evt) => {
     evt.preventDefault();
     navigate("/admin");
   };
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [postData, setPostData] = useState();
+
   useEffect(() => {
+    setLoading(true);
     fetch("http://localhost:4000/posts")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        console.log("response", response);
         return response.json();
       })
       .then((data) => {
-        console.log("data", data);
-        setPostData(data);
+        setPostData(data || []);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("error message", error);
+        setLoading(false);
       });
   }, []);
 
   const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+
     try {
       const response = await fetch(`http://localhost:4000/posts/${id}`, {
         method: "DELETE",
@@ -47,6 +55,11 @@ const AdminPosts = () => {
   };
 
   const handleCreate = async () => {
+    if (!title.trim() || !description.trim()) {
+      alert("Please fill in all fields");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:4000/posts", {
         method: "POST",
@@ -67,6 +80,11 @@ const AdminPosts = () => {
   };
 
   const handleUpdate = async (id) => {
+    if (!title.trim() || !description.trim()) {
+      alert("Please fill in all fields");
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:4000/posts/${id}`, {
         method: "PATCH",
@@ -84,132 +102,153 @@ const AdminPosts = () => {
     }
   };
 
+  const filteredPosts = postData.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.description.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
-    <div>
-      <Popup
-        trigger={
-          <button
-            style={{
-              position: "relative",
-              bottom: "5rem",
-              left: "30rem",
-            }}
-          >
-            Create Post
-          </button>
-        }
-        modal
-        nested
-      >
-        {(close) => (
-          <div className="modal">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCreate();
-                close();
-              }}
-            >
-              <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <button type="submit">Create</button>
-              <button type="button" onClick={close}>
-                Cancel
-              </button>
-            </form>
-          </div>
-        )}
-      </Popup>
+    <div className="container">
       <button
-        style={{
-          position: "relative",
-          bottom: "5rem",
-          left: "31rem",
-        }}
-        onClick={handleClick}
+        onClick={handleBack}
+        style={{ position: "relative", left: "13rem", top: "40px" }}
       >
         Back
       </button>
-      <div className="container">
-        <ul>
-          {postData?.map((post) => (
-            <li
-              key={post.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              {post.title}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "20px",
-                  alignItems: "center",
+      <div className="header-right">
+        <Popup trigger={<button> Create Post</button>} modal nested>
+          {(close) => (
+            <div className="modal-content">
+              <h2>Create New Post</h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCreate();
+                  close();
                 }}
               >
-                <Popup
-                  trigger={<button>Edit</button>}
-                  onOpen={() => {
-                    setTitle(post.title);
-                    setDescription(post.description);
-                  }}
-                  modal
-                  nested
-                >
-                  {(close) => (
-                    <div className="modal">
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          handleUpdate(post._id);
-                          close();
-                        }}
-                      >
-                        <input
-                          type="text"
-                          placeholder="Title"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <input
-                          type="text"
-                          placeholder="Description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
-                        <button type="submit" style={{ marginTop: "5px" }}>
-                          Update
-                        </button>
-                        <button
-                          type="button"
-                          onClick={close}
-                          style={{ marginTop: "5px" }}
-                        >
-                          Cancel
-                        </button>
-                      </form>
-                    </div>
-                  )}
-                </Popup>
-                <button onClick={() => handleDelete(post._id)}>Delete</button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    placeholder="Enter post title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    placeholder="Enter post description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                    rows="5"
+                  ></textarea>
+                </div>
+                <div className="form-actions">
+                  <button type="submit" className="save-btn">
+                    Create Post
+                  </button>
+                  <button type="button" className="cancel-btn" onClick={close}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </Popup>
       </div>
+
+      <main className="posts-main">
+        {loading ? (
+          <div className="loading">Loading posts...</div>
+        ) : filteredPosts.length === 0 ? (
+          <div className="empty-state">
+            <p>No posts found</p>
+          </div>
+        ) : (
+          <div className="posts-grid">
+            {filteredPosts.map((post) => (
+              <div key={post._id} className="post-card">
+                <div className="post-header">
+                  <h3 className="post-title">{post.title}</h3>
+                </div>
+                <p className="post-description">{post.description}</p>
+                <div className="post-actions">
+                  <Popup
+                    trigger={<button className="edit-btn">Edit</button>}
+                    onOpen={() => {
+                      setTitle(post.title);
+                      setDescription(post.description);
+                    }}
+                    modal
+                    nested
+                  >
+                    {(close) => (
+                      <div className="modal-content">
+                        <h2>Edit Post</h2>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            handleUpdate(post._id);
+                            close();
+                          }}
+                        >
+                          <div className="form-group">
+                            <label>Title</label>
+                            <input
+                              type="text"
+                              placeholder="Enter post title"
+                              value={title}
+                              onChange={(e) => setTitle(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label>Description</label>
+                            <textarea
+                              placeholder="Enter post description"
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
+                              required
+                              rows="5"
+                            ></textarea>
+                          </div>
+                          <div className="form-actions">
+                            <button type="submit" className="save-btn">
+                              Update Post
+                            </button>
+                            <button
+                              type="button"
+                              className="cancel-btn"
+                              onClick={close}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+                  </Popup>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(post._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+
+      <footer className="posts-footer">
+        <p>Total Posts: {filteredPosts.length}</p>
+      </footer>
     </div>
   );
 };

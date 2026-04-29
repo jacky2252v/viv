@@ -1,35 +1,48 @@
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
-
+import { Link, useNavigate } from "react-router-dom";
+import "./styles/AdminDashboard.css";
 
 const AdminDashboard = () => {
-    const navigate = useNavigate()
-    const handleLogOut = evt => {
-        evt.preventDefault()
-        navigate("/")
-    };
+  const navigate = useNavigate();
 
-    return (
-        <div>
-            <button style={{
-                position: "relative",
-                bottom: "3rem",
-                left: "35rem"
-            }}
-                onClick={handleLogOut}
-            >
-                Logout
-            </button>
-            <div className="container">
-                <h1 style={{ fontSize: "35px" }}>Admin Dashboard</h1>
-                <div style={{display:"flex", justifyContent:"center", gap:"35px"}}>
-                <h2><Link to={`/admin/users`} style={{ fontSize: "25px" }}>Show Users</Link></h2>
-                <h2><Link to={`/admin/posts`} style={{ fontSize: "25px" }}>Show Posts</Link></h2>
-                </div>
-            </div>
+  const handleLogOut = (evt) => {
+    evt.preventDefault();
+    navigate("/");
+  };
 
+  return (
+    <div className="dashboard-container">
+      <header className="dashboard-header">
+        <div className="header-content">
+          <h1 className="dashboard-title">Admin Dashboard</h1>
+          <button className="logout-btn" onClick={handleLogOut}>
+            Logout
+          </button>
         </div>
-    );
+      </header>
+
+      <main className="dashboard-main">
+        <div className="dashboard-cards">
+          <Link to="/admin/users" className="dashboard-card users-card">
+            <h2 className="card-title">Manage Users</h2>
+            <p className="card-description">
+              View and manage all users in the system
+            </p>
+            <span className="card-action">Go to Users →</span>
+          </Link>
+
+          <Link to="/admin/posts" className="dashboard-card posts-card">
+            <h2 className="card-title">Manage Posts</h2>
+            <p className="card-description">Create, edit, and delete posts</p>
+            <span className="card-action">Go to Posts →</span>
+          </Link>
+        </div>
+      </main>
+
+      <footer className="dashboard-footer">
+        <p>&copy; 2024 Admin Panel. All rights reserved.</p>
+      </footer>
+    </div>
+  );
 };
 
-export default AdminDashboard
+export default AdminDashboard;
