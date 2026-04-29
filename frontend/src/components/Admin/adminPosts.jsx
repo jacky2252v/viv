@@ -110,12 +110,6 @@ const AdminPosts = () => {
 
   return (
     <div className="container">
-      <button
-        onClick={handleBack}
-        style={{ position: "relative", left: "13rem", top: "40px" }}
-      >
-        Back
-      </button>
       <div className="header-right">
         <Popup trigger={<button> Create Post</button>} modal nested>
           {(close) => (
@@ -160,6 +154,7 @@ const AdminPosts = () => {
             </div>
           )}
         </Popup>
+        <button onClick={handleBack}>Back</button>
       </div>
 
       <main className="posts-main">

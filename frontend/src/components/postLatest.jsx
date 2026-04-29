@@ -1,44 +1,96 @@
 import { Link } from "react-router-dom";
-import posts from "./data/posts";
 import { useNavigate } from "react-router";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import "./styles/PostLatest.css";
 
 const PostLatest = () => {
   const navigate = useNavigate();
+  const [postData, setPostData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:4000/posts")
+      .then((response) => response.json())
+      .then((data) => {
+        setPostData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  const handlePostClick = (postId) => {
+    if (window.gtag) {
+      window.gtag("event", "post_click", {
+        post_id: postId,
+      });
+    } else {
+      console.log("Mock post_click:", postId);
+    }
+  };
+
   const handleLogOut = (evt) => {
     evt.preventDefault();
     navigate("/");
   };
 
-  const [postData, setPostData] = useState();
-  useEffect(() => {
-    fetch("http://localhost:4000/posts")
-      .then((response) => response.json())
-      .then((data) => setPostData(data));
-  }, []);
+  const filteredPosts = postData.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  if (loading) {
+    return (
+      <div className="post-latest-container">
+        <div className="loader"></div>
+        <p className="loading-text">Loading posts...</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <button
-        style={{
-          position: "relative",
-          bottom: "15rem",
-          left: "35rem",
-        }}
-        onClick={handleLogOut}
-      >
-        Logout
-      </button>
-      <h2>Latest Posts</h2>
-      {postData?.map((post) => (
-        <div key={post._id} className="post-preview">
-          <h3>
-            <Link to={`/post/${post._id}`}>{post.title}</Link>
-          </h3>
-          <p>{post.excerpt}</p>
+    <div className="container">
+      <header className="post-header">
+        <div className="header-content">
+          <h1 className="main-title">Latest Posts</h1>
         </div>
-      ))}
+        <button className="logout-btn" onClick={handleLogOut}>
+          Logout
+        </button>
+      </header>
+
+      <div className="posts-section">
+        {filteredPosts.length === 0 ? (
+          <div className="empty-state">
+            <p className="empty-text">No posts found</p>
+          </div>
+        ) : (
+          <div className="posts-grid">
+            {filteredPosts.map((post) => (
+              <Link
+                key={post._id}
+                to={`/post/${post._id}`}
+                onClick={() => handlePostClick(post._id)}
+                className="post-card-link"
+              >
+                <article className="post-card">
+                  <div className="post-content">
+                    <h3 className="post-title">{post.title}</h3>
+                    <p className="post-excerpt">{post.description}</p>
+                  </div>
+                  <div className="post-footer">
+                    <span className="read-more">Read More </span>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
