@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import "./styles/PostLatest.css";
+import AdUnit from "./googleAds";
 
 const PostLatest = () => {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ const PostLatest = () => {
       </header>
 
       <div className="posts-section">
+        <AdUnit />
         {filteredPosts.length === 0 ? (
           <div className="empty-state">
             <p className="empty-text">No posts found</p>
