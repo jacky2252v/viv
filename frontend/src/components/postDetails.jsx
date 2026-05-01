@@ -68,7 +68,7 @@ const PostDetail = () => {
       <header className="detail-header">
         <button onClick={handleBack}>Back to Posts</button>
       </header>
-
+      <div id="static-ad-1" style={{ width: "100px", height: "100px" }}></div>
       <article className="post-detail">
         <div className="post-detail-content">
           <h1 className="post-title">{postData.title}</h1>

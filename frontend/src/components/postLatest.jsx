@@ -55,6 +55,7 @@ const PostLatest = () => {
 
   return (
     <div className="container">
+      <div id="banner-ad" style={{ width: "100%", height: "100px" }}></div>
       <header className="post-header">
         <div className="header-content">
           <h1 className="main-title">Latest Posts</h1>
@@ -65,7 +66,6 @@ const PostLatest = () => {
       </header>
 
       <div className="posts-section">
-        <AdUnit />
         {filteredPosts.length === 0 ? (
           <div className="empty-state">
             <p className="empty-text">No posts found</p>
