@@ -9,24 +9,32 @@ const PostDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (window.googletag) {
-      window.googletag.cmd.push(() => {
-        window.googletag.display("responsive-ad");
-      });
-    }
+    const timer = setTimeout(() => {
+      if (window.googletag && document.getElementById("responsive-ad")) {
+        window.googletag.cmd.push(() => {
+          window.googletag.display("responsive-ad");
+        });
+      }
+    }, 500); // small delay ensures DOM is ready
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (window.googletag) {
-      window.googletag.cmd.push(() => {
-        if (window.leftSideRail) {
-          window.googletag.display(window.leftSideRail);
-        }
-        if (window.rightSideRail) {
-          window.googletag.display(window.rightSideRail);
-        }
-      });
-    }
+    const timer = setTimeout(() => {
+      if (window.googletag) {
+        window.googletag.cmd.push(() => {
+          if (window.leftSideRail) {
+            window.googletag.display(window.leftSideRail);
+          }
+          if (window.rightSideRail) {
+            window.googletag.display(window.rightSideRail);
+          }
+        });
+      }
+    }, 500); // small delay ensures DOM is ready
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -90,7 +98,7 @@ const PostDetail = () => {
         <button onClick={handleBack}>Back to Posts</button>
       </header>
       <div class="ad-container">
-        <div id="responsive-ad" class="ad-slot"></div>
+        <div id="responsive-ad" className="ad-slot"></div>
       </div>
 
       <article className="post-detail">

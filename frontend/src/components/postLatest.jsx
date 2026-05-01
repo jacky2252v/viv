@@ -23,11 +23,15 @@ const PostLatest = () => {
   }, []);
 
   useEffect(() => {
-    if (window.googletag) {
-      window.googletag.cmd.push(() => {
-        window.googletag.display("responsive-ad");
-      });
-    }
+    const timer = setTimeout(() => {
+      if (window.googletag && document.getElementById("responsive-ad")) {
+        window.googletag.cmd.push(() => {
+          window.googletag.display("responsive-ad");
+        });
+      }
+    }, 500); // small delay ensures DOM is ready
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handlePostClick = (postId) => {
@@ -71,7 +75,7 @@ const PostLatest = () => {
         </button>
       </header>
       <div class="ad-container">
-        <div id="responsive-ad" class="ad-slot"></div>
+        <div id="responsive-ad" className="ad-slot"></div>
       </div>
       <div className="posts-section">
         {filteredPosts.length === 0 ? (
