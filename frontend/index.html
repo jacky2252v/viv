@@ -6,66 +6,85 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>frontend</title>
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1332791437772738"
-    crossorigin="anonymous"></script> -->
-  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+
+  <!-- Load GPT ONCE -->
+  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+
   <script>
     window.googletag = window.googletag || { cmd: [] };
 
+    let leftSideRail = null;
+    let rightSideRail = null;
+
     googletag.cmd.push(() => {
-      // Define an ad slot for div with id "banner-ad".
+      const pubads = googletag.pubads();
+
+      // =========================
+      // Define ALL ad slots here
+      // =========================
+
+      // Banner Ad
       googletag
         .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
-        .addService(googletag.pubads());
+        .addService(pubads);
 
-      // Enable the PubAdsService.
-      googletag.enableServices();
-    });
-  </script>
-  <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
-  <script>
-    window.googletag = window.googletag || { cmd: [] };
-
-    let leftSideRail;
-    let rightSideRail;
-
-    googletag.cmd.push(() => {
-      // Define left and right side rail ad slots.
-      leftSideRail = googletag.defineOutOfPageSlot(
-        "/6355419/Travel/Europe",
-        googletag.enums.OutOfPageFormat.LEFT_SIDE_RAIL,
-      );
-      rightSideRail = googletag.defineOutOfPageSlot(
-        "/6355419/Travel/Europe",
-        googletag.enums.OutOfPageFormat.RIGHT_SIDE_RAIL,
-      );
-
-      // Side rail slots return null if the page or device does not support
-      // side rails.
-      if (leftSideRail) leftSideRail.addService(googletag.pubads());
-      if (rightSideRail) rightSideRail.addService(googletag.pubads());
-
-      if (leftSideRail && rightSideRail) {
-        document.getElementById("status").textContent = "Side rail ads are initialized.";
-      } else if (leftSideRail || rightSideRail) {
-        document.getElementById("status").textContent =
-          `${leftSideRail ? "Left" : "Right"} side rail ad is initialized.`;
-      } else {
-        document.getElementById("status").textContent =
-          "Side rail ads are not supported on this page.";
-      }
-
-      // Define static ad slots.
+      // Static Ad
       googletag
         .defineSlot("/6355419/Travel/Europe", [100, 100], "static-ad-1")
+        .addService(pubads);
+
+      // Side Rails (may return null)
+      leftSideRail = googletag.defineOutOfPageSlot(
+        "/6355419/Travel/Europe",
+        googletag.enums.OutOfPageFormat.LEFT_SIDE_RAIL
+      );
+
+      rightSideRail = googletag.defineOutOfPageSlot(
+        "/6355419/Travel/Europe",
+        googletag.enums.OutOfPageFormat.RIGHT_SIDE_RAIL
+      );
+
+      if (leftSideRail) leftSideRail.addService(pubads);
+      if (rightSideRail) rightSideRail.addService(pubads);
+
+      const responsiveAdSlot = googletag
+        .defineSlot(
+          "/6355419/Travel/Europe",
+          [
+            [300, 250],
+            [728, 90],
+            [750, 200],
+          ],
+          "responsive-ad",
+        )
         .addService(googletag.pubads());
 
-      // Enable SRA.
+      const mapping = googletag
+        .sizeMapping()
+        .addSize(
+          [1024, 768],
+          [
+            [750, 200],
+            [728, 90],
+          ],
+        )
+        .addSize([640, 480], [300, 250])
+        .addSize([0, 0], [])
+        .build();
+
+      responsiveAdSlot.defineSizeMapping(mapping);
+
+      // =========================
+      // Global settings
+      // =========================
+
       googletag.setConfig({
         singleRequest: true,
       });
 
-      // Enable services.
+      // Optional (good for dev/testing)
+      // pubads.setRequestNonPersonalizedAds(1);
+
       googletag.enableServices();
     });
   </script>
@@ -74,22 +93,6 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
-  <script>
-    googletag.cmd.push(() => {
-      // Request and render an ad for the "banner-ad" slot.
-      googletag.display("banner-ad");
-    });
-  </script>
-  <script>
-    googletag.cmd.push(() => {
-      // Ensure the first call to display comes after static ad slot
-      // divs are defined. If you do not have any static ad slots, this
-      // call can be made immediately after services are enabled.
-      if (leftSideRail || rightSideRail) {
-        googletag.display(leftSideRail || rightSideRail);
-      }
-    });
-  </script>
 </body>
 
 </html>

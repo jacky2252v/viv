@@ -9,6 +9,27 @@ const PostDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (window.googletag) {
+      window.googletag.cmd.push(() => {
+        window.googletag.display("responsive-ad");
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (window.googletag) {
+      window.googletag.cmd.push(() => {
+        if (window.leftSideRail) {
+          window.googletag.display(window.leftSideRail);
+        }
+        if (window.rightSideRail) {
+          window.googletag.display(window.rightSideRail);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (postData) {
       if (window.gtag) {
         window.gtag("event", "post_view", {
@@ -68,7 +89,10 @@ const PostDetail = () => {
       <header className="detail-header">
         <button onClick={handleBack}>Back to Posts</button>
       </header>
-      <div id="static-ad-1" style={{ width: "100px", height: "100px" }}></div>
+      <div class="ad-container">
+        <div id="responsive-ad" class="ad-slot"></div>
+      </div>
+
       <article className="post-detail">
         <div className="post-detail-content">
           <h1 className="post-title">{postData.title}</h1>

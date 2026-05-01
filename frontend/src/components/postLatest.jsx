@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import "./styles/PostLatest.css";
-import AdUnit from "./googleAds";
 
 const PostLatest = () => {
   const navigate = useNavigate();
@@ -21,6 +20,14 @@ const PostLatest = () => {
         console.error("Error fetching posts:", error);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    if (window.googletag) {
+      window.googletag.cmd.push(() => {
+        window.googletag.display("responsive-ad");
+      });
+    }
   }, []);
 
   const handlePostClick = (postId) => {
@@ -55,7 +62,6 @@ const PostLatest = () => {
 
   return (
     <div className="container">
-      <div id="banner-ad" style={{ width: "100%", height: "100px" }}></div>
       <header className="post-header">
         <div className="header-content">
           <h1 className="main-title">Latest Posts</h1>
@@ -64,7 +70,9 @@ const PostLatest = () => {
           Logout
         </button>
       </header>
-
+      <div class="ad-container">
+        <div id="responsive-ad" class="ad-slot"></div>
+      </div>
       <div className="posts-section">
         {filteredPosts.length === 0 ? (
           <div className="empty-state">
