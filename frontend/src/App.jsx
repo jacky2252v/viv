@@ -1,12 +1,7 @@
 import React from "react";
 import Hero from "./components/Hero";
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  BrowserRouter,
-} from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 import PostDetail from "./components/postDetails";
 import PostLatest from "./components/postLatest";
 import AdminDashboard from "./components/Admin/adminDashboard";
