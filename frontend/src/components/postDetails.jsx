@@ -97,7 +97,7 @@ const PostDetail = () => {
       <header className="detail-header">
         <button onClick={handleBack}>Back to Posts</button>
       </header>
-      <div class="ad-container">
+      <div className="ad-container">
         <div id="responsive-ad" className="ad-slot"></div>
       </div>
 

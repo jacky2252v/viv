@@ -74,7 +74,7 @@ const PostLatest = () => {
           Logout
         </button>
       </header>
-      <div class="ad-container">
+      <div className="ad-container">
         <div id="responsive-ad" className="ad-slot"></div>
       </div>
       <div className="posts-section">
