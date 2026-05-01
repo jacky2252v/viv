@@ -20,20 +20,46 @@
       const pubads = googletag.pubads();
 
       // =========================
-      // Define ALL ad slots here
-      // =========================
-
       // Banner Ad
+      // =========================
       googletag
         .defineSlot("/6355419/Travel/Europe/France/Paris", [300, 250], "banner-ad")
         .addService(pubads);
 
+      // =========================
       // Static Ad
+      // =========================
       googletag
         .defineSlot("/6355419/Travel/Europe", [100, 100], "static-ad-1")
         .addService(pubads);
 
-      // Side Rails (may return null)
+      // =========================
+      // Responsive Ad (FIXED)
+      // =========================
+      const responsiveAdSlot = googletag
+        .defineSlot(
+          "/6355419/Travel/Europe",
+          [
+            [300, 250],
+            [728, 90],
+            [750, 200],
+          ],
+          "responsive-ad"
+        );
+
+      const mapping = googletag
+        .sizeMapping()
+        .addSize([1024, 768], [[750, 200], [728, 90]])
+        .addSize([640, 480], [300, 250])
+        .addSize([0, 0], [])
+        .build();
+
+      responsiveAdSlot.defineSizeMapping(mapping);
+      responsiveAdSlot.addService(pubads);
+
+      // =========================
+      // Side rails
+      // =========================
       leftSideRail = googletag.defineOutOfPageSlot(
         "/6355419/Travel/Europe",
         googletag.enums.OutOfPageFormat.LEFT_SIDE_RAIL
@@ -47,43 +73,14 @@
       if (leftSideRail) leftSideRail.addService(pubads);
       if (rightSideRail) rightSideRail.addService(pubads);
 
-      const responsiveAdSlot = googletag
-        .defineSlot(
-          "/6355419/Travel/Europe",
-          [
-            [300, 250],
-            [728, 90],
-            [750, 200],
-          ],
-          "responsive-ad",
-        )
-        .addService(googletag.pubads());
-
-      const mapping = googletag
-        .sizeMapping()
-        .addSize(
-          [1024, 768],
-          [
-            [750, 200],
-            [728, 90],
-          ],
-        )
-        .addSize([640, 480], [300, 250])
-        .addSize([0, 0], [])
-        .build();
-
-      responsiveAdSlot.defineSizeMapping(mapping);
-
       // =========================
-      // Global settings
+      // Settings
       // =========================
+      pubads.setRequestNonPersonalizedAds(1);
 
       googletag.setConfig({
         singleRequest: true,
       });
-
-      // Optional (good for dev/testing)
-      // pubads.setRequestNonPersonalizedAds(1);
 
       googletag.enableServices();
     });
