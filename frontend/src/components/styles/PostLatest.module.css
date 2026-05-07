@@ -368,15 +368,75 @@
   .newsGrid {
     grid-template-columns: 1fr;
   }
+  
+  .newsDetailLayout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
   .regularGrid {
     grid-template-columns: 1fr;
   }
+  
   .headerTop {
     flex-direction: column;
+    align-items: stretch;
     gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .logoArea {
+    text-align: center;
+  }
+  
+  .headerControls {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .searchBox {
+    width: 100%;
+    order: 3;
+    margin-top: 10px;
+  }
+  
+  .searchBox input {
+    width: 100%;
+  }
+  
+  .featuredImg {
+    height: 250px;
+  }
+  
+  .featuredContent h2 {
+    font-size: 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+  
+  .logo {
+    font-size: 1.8rem;
+  }
+  
+  .newsCard h4 {
+    font-size: 1rem;
+  }
+  
+  .newsDetailMeta {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .newsDetailTitle {
+    font-size: 2rem;
+  }
+  
+  .newsDetailExcerpt {
+    font-size: 1.1rem;
   }
 }
 

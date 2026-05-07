@@ -264,3 +264,66 @@ input:focus {
 .container.right-panel-active .overlay-right {
   transform: translateX(20%);
 }
+
+.mobileToggle {
+  display: none;
+  margin-top: 15px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.mobileToggle span {
+  color: var(--accent-color);
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 1rem;
+  }
+
+  .container {
+    width: 100%;
+    min-height: 500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-container {
+    width: 100%;
+    position: relative;
+    transition: opacity 0.3s ease;
+  }
+
+  /* When SignIn is active */
+  .sign-in-container {
+    display: flex;
+    z-index: 2;
+  }
+
+  .container.right-panel-active .sign-in-container {
+    display: none;
+  }
+
+  /* When SignUp is active */
+  .sign-up-container {
+    display: none;
+  }
+
+  .container.right-panel-active .sign-up-container {
+    display: flex;
+    transform: none;
+    animation: none;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .mobileToggle {
+    display: block;
+  }
+}

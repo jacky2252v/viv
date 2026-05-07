@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import React from "react";
 import { useNavigate } from "react-router";
-function SignInForm() {
+function SignInForm({ onToggle }) {
   const [state, setState] = React.useState({
     email: "",
     password: "",
@@ -78,6 +78,9 @@ function SignInForm() {
         />
         <a href="#">Forgot your password?</a>
         <button>Sign In</button>
+        <p className={styles.mobileToggle}>
+          Don't have an account? <span onClick={onToggle}>Sign Up</span>
+        </p>
       </form>
     </div>
   );

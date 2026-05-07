@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import React from "react";
 import { useEffect } from "react";
-function SignUpForm() {
+function SignUpForm({ onToggle }) {
     const [state, setState] = React.useState({
         name: "",
         email: "",
@@ -73,6 +73,9 @@ function SignUpForm() {
                     placeholder="Password"
                 />
                 <button>Sign Up</button>
+                <p className={styles.mobileToggle}>
+                    Already have an account? <span onClick={onToggle}>Sign In</span>
+                </p>
             </form>
         </div>
     );

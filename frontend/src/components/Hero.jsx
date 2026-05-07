@@ -16,8 +16,8 @@ export default function Hero() {
   return (
     <div className={styles.App}>
       <div className={containerClass} id="container">
-        <SignUpForm />
-        <SignInForm />
+        <SignUpForm onToggle={() => handleOnClick("signIn")} />
+        <SignInForm onToggle={() => handleOnClick("signUp")} />
         <div className={styles["overlay-container"]}>
           <div className={styles.overlay}>
             <div className={`${styles["overlay-panel"]} ${styles["overlay-left"]}`}>
