@@ -1,155 +1,258 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.dashboard-container {
+.dashboardContainer {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.dashboard-header {
-  background: rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.dashboardHeader {
+  background: var(--bg-secondary);
+  padding: 1.5rem 5%;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
+.headerContent {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.dashboard-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.dashboardTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
 }
 
-.logout-btn {
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
+.logoutBtn {
+  background: var(--bg-primary);
+  color: var(--danger-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1.2rem;
   border-radius: 8px;
-  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
-.logout-btn:hover {
-  background: #ff5252;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+.logoutBtn:hover {
+  background: var(--danger-color);
+  color: white;
+  border-color: var(--danger-color);
 }
 
-.logout-btn span {
-  font-size: 1.2rem;
-}
-
-.dashboard-main {
+.dashboardMain {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-}
-
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 900px;
+  padding: 3rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
   width: 100%;
 }
 
-.dashboard-card {
-  background: white;
+.sectionTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.reportsSection {
+  margin-bottom: 3rem;
+  animation: fadeIn 0.6s ease;
+}
+
+.chartsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.chartCard {
+  background: var(--bg-secondary);
   border-radius: 16px;
-  padding: 2rem;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  align-items: center;
 }
 
-.dashboard-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+.chartCard h3 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  align-self: flex-start;
 }
 
-.card-icon {
-  font-size: 3rem;
-  text-align: center;
+/* Animated Bar Chart */
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3rem;
+  height: 200px;
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
 }
 
-.card-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2c3e50;
-  text-align: center;
+.barWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
 }
 
-.card-description {
-  font-size: 1rem;
-  color: #7f8c8d;
-  text-align: center;
-  line-height: 1.6;
-}
-
-.card-action {
-  display: inline-block;
-  color: #667eea;
-  font-weight: 600;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-.dashboard-card:hover .card-action {
-  color: #764ba2;
-}
-
-.dashboard-footer {
-  background: rgba(0, 0, 0, 0.1);
+.barValue {
+  width: 60px;
+  background: var(--text-secondary);
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 0.5rem;
   color: white;
-  text-align: center;
-  padding: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: bold;
   font-size: 0.9rem;
+  height: 0%; /* Initial state for animation */
+  animation: growBar 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 0.2s;
+  transition: opacity 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .dashboard-title {
-    font-size: 2rem;
-  }
+.barValue:hover {
+  opacity: 0.8;
+}
 
-  .header-content {
-    flex-direction: column;
-    gap: 1rem;
-  }
+.barLabel {
+  margin-top: 1rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
 
-  .logout-btn {
-    width: 100%;
-    justify-content: center;
-  }
+@keyframes growBar {
+  to { height: var(--target-height); }
+}
 
-  .dashboard-cards {
-    grid-template-columns: 1fr;
-  }
+/* Animated Pie Chart */
+.pieChartWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pieChart {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  position: relative;
+  /* conic-gradient works on modern browsers, fallback to simple bg */
+  background: conic-gradient(
+    var(--text-secondary) 0% calc(var(--p-users) * 1%), 
+    var(--accent-color) calc(var(--p-users) * 1%) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transform: scale(0);
+  animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 0.3s;
+}
+
+.pieCenter {
+  width: 120px;
+  height: 120px;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: var(--text-primary);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.pieLegend {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+@keyframes popIn {
+  to { transform: scale(1); }
+}
+
+/* Quick Actions Cards */
+.dashboardCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  animation: fadeIn 0.6s ease;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+.dashboardCard {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboardCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+}
+
+.cardTitle {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.cardDescription {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.cardAction {
+  color: var(--accent-color);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.3s ease;
+}
+
+.dashboardCard:hover .cardAction {
+  gap: 0.8rem;
 }

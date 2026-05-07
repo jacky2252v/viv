@@ -9,47 +9,6 @@ const PostDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (window.googletag && document.getElementById("responsive-ad")) {
-        window.googletag.cmd.push(() => {
-          window.googletag.display("responsive-ad");
-        });
-      }
-    }, 500); // small delay ensures DOM is ready
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (window.googletag) {
-        window.googletag.cmd.push(() => {
-          if (window.leftSideRail) {
-            window.googletag.display(window.leftSideRail);
-          }
-          if (window.rightSideRail) {
-            window.googletag.display(window.rightSideRail);
-          }
-        });
-      }
-    }, 500); // small delay ensures DOM is ready
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (postData) {
-      if (window.gtag) {
-        window.gtag("event", "post_view", {
-          post_id: postData._id,
-        });
-      } else {
-        console.log("Mock post_view:", postData._id);
-      }
-    }
-  }, [postData]);
-
-  useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`)
       .then((response) => response.json())
       .then((data) => {
@@ -69,23 +28,24 @@ const PostDetail = () => {
 
   if (loading) {
     return (
-      <div className={styles["post-detail-container"]}>
-        <div className={styles.loader}></div>
-        <p className={styles["loading-text"]}>Loading post...</p>
+      <div className="universal-loader-container">
+        <div className="universal-loader"></div>
+        <p className="universal-loader-text">Loading the article...</p>
       </div>
     );
   }
 
   if (!postData) {
     return (
-      <div className={styles["post-detail-container"]}>
-        <div className={styles["error-state"]}>
-          <h2 className={styles["error-title"]}>Post Not Found</h2>
-          <p className={styles["error-message"]}>
-            The post you&apos;re looking for doesn&apos;t exist.
+      <div className={styles.postDetailContainer}>
+        <div className={styles.errorState}>
+          <span className={styles.errorIcon}>⚠️</span>
+          <h2 className={styles.errorTitle}>Post Not Found</h2>
+          <p className={styles.errorMessage}>
+            The post you're looking for doesn't exist or has been removed.
           </p>
-          <button className={styles["back-btn"]} onClick={handleBack}>
-            Back to Posts
+          <button className={styles.backBtn} onClick={handleBack}>
+            ← Back to Feed
           </button>
         </div>
       </div>
@@ -94,22 +54,44 @@ const PostDetail = () => {
 
   return (
     <div className={styles.container}>
-      <header className={styles["detail-header"]}>
-        <button onClick={handleBack}>Back to Posts</button>
+      <header className={styles.detailHeader}>
+        <div className={styles.headerContent}>
+          <button className={styles.backBtn} onClick={handleBack}>
+            ← Back
+          </button>
+        </div>
       </header>
-      <div className={styles["ad-container"]}>
-        <div id="responsive-ad" className={styles["ad-slot"]}></div>
-      </div>
 
-      <article className={styles["post-detail"]}>
-        <div className={styles["post-detail-content"]}>
-          <h1 className={styles["post-title"]}>{postData.title}</h1>
-          <div className={styles["post-body"]}>
-            <p className={styles["post-description"]}>{postData.description}</p>
+      <article className={styles.postArticle}>
+        <div className={styles.articleHeader}>
+          <h1 className={styles.postTitle}>{postData.title}</h1>
+          {/* Mock author and date since backend doesn't seem to provide it currently */}
+          <div className={styles.postMeta}>
+            <div className={styles.authorInfo}>
+              <div className={styles.authorAvatar}>A</div>
+              <span className={styles.authorName}>Admin</span>
+            </div>
+            <span className={styles.publishDate}>
+              {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
           </div>
+        </div>
+        
+        {/* Placeholder hero image */}
+        <div className={styles.heroImageContainer}>
+           <img 
+              src={postData.image || `https://source.unsplash.com/random/1200x600?nature,technology,sig=${postData._id}`} 
+              alt={postData.title} 
+              className={styles.heroImage} 
+              onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&q=80'; }}
+            />
+        </div>
 
+        <div className={styles.articleContent}>
+          <p className={styles.postDescription}>{postData.description}</p>
+          
           {postData.content && (
-            <div className={styles["post-full-content"]}>{postData.content}</div>
+            <div className={styles.postFullContent}>{postData.content}</div>
           )}
         </div>
       </article>

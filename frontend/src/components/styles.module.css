@@ -1,64 +1,68 @@
 .App {
-  font-family: sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   text-align: center;
-}
-
-/* @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800"); */
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background: #f6f5f7;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
-  font-family: "Montserrat", sans-serif;
-  height: 100vh;
-  margin: -20px 0 50px;
+  justify-content: center;
+  background: var(--bg-primary);
+  padding: 2rem;
 }
 
 h1 {
-  font-weight: bold;
+  font-weight: 800;
   margin: 0;
+  color: var(--text-primary);
 }
 
 h2 {
   text-align: center;
+  color: var(--text-primary);
 }
 
 p {
   font-size: 14px;
-  font-weight: 100;
+  font-weight: 300;
   line-height: 20px;
   letter-spacing: 0.5px;
   margin: 20px 0 30px;
+  color: var(--text-secondary);
 }
 
 span {
   font-size: 12px;
+  color: var(--text-secondary);
 }
 
 a {
-  color: #333;
+  color: var(--text-secondary);
   font-size: 14px;
   text-decoration: none;
   margin: 15px 0;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-color);
 }
 
 button {
   border-radius: 20px;
-  border: 1px solid #ff4b2b;
-  background-color: #ff4b2b;
+  border: 1px solid var(--accent-color);
+  background-color: var(--accent-color);
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  transition: transform 80ms ease-in;
+  transition: transform 80ms ease-in, box-shadow 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+button:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 button:active {
@@ -75,7 +79,7 @@ button.ghost {
 }
 
 form {
-  background-color: #ffffff;
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,22 +90,32 @@ form {
 }
 
 input {
-  background-color: #eee;
-  border: none;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+  color: var(--text-primary);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .container {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  background-color: var(--bg-secondary);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
   position: relative;
   overflow: hidden;
-  width: 768px;
+  width: 900px;
   max-width: 100%;
-  min-height: 480px;
+  min-height: 550px;
+  border: 1px solid var(--border-color);
 }
 
 .form-container {
@@ -165,9 +179,7 @@ input {
 }
 
 .overlay {
-  background: #ff416c;
-  background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
-  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
@@ -178,6 +190,10 @@ input {
   width: 200%;
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
+}
+
+.overlay p, .overlay h1 {
+  color: #ffffff;
 }
 
 .container.right-panel-active .overlay {
@@ -197,6 +213,8 @@ input {
   width: 50%;
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .overlay-left {
@@ -214,44 +232,4 @@ input {
 
 .container.right-panel-active .overlay-right {
   transform: translateX(20%);
-}
-
-.social-container {
-  margin: 20px 0;
-}
-
-.social-container a {
-  border: 1px solid #dddddd;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px;
-  height: 40px;
-  width: 40px;
-}
-
-footer {
-  background-color: #222;
-  color: #fff;
-  font-size: 14px;
-  bottom: 0;
-  position: fixed;
-  left: 0;
-  right: 0;
-  text-align: center;
-  z-index: 999;
-}
-
-footer p {
-  margin: 10px 0;
-}
-
-footer i {
-  color: red;
-}
-
-footer a {
-  color: #3c97bf;
-  text-decoration: none;
 }

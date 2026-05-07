@@ -8,6 +8,19 @@ const PostLatest = () => {
   const [postData, setPostData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || 
+    (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`)
@@ -22,28 +35,6 @@ const PostLatest = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (window.googletag && document.getElementById("responsive-ad")) {
-        window.googletag.cmd.push(() => {
-          window.googletag.display("responsive-ad");
-        });
-      }
-    }, 500); // small delay ensures DOM is ready
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handlePostClick = (postId) => {
-    if (window.gtag) {
-      window.gtag("event", "post_click", {
-        post_id: postId,
-      });
-    } else {
-      console.log("Mock post_click:", postId);
-    }
-  };
-
   const handleLogOut = (evt) => {
     evt.preventDefault();
     navigate("/");
@@ -51,60 +42,82 @@ const PostLatest = () => {
 
   const filteredPosts = postData.filter(
     (post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()),
+      post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  if (loading) {
-    return (
-      <div className={styles["post-latest-container"]}>
-        <div className={styles.loader}></div>
-        <p className={styles["loading-text"]}>Loading posts...</p>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.container}>
-      <header className={styles["post-header"]}>
-        <div className={styles["header-content"]}>
-          <h1 className={styles["main-title"]}>Latest Posts</h1>
+      <header className={styles.header}>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.mainTitle}>Latest Posts</h1>
         </div>
-        <button className={styles["logout-btn"]} onClick={handleLogOut}>
-          Logout
-        </button>
+        <div className={styles.headerRight}>
+          <div className={styles.searchWrapper}>
+             <input 
+               type="text" 
+               className={styles.searchInput}
+               placeholder="Search articles..."
+               value={searchTerm}
+               onChange={(e) => setSearchTerm(e.target.value)}
+             />
+          </div>
+          <button className={styles.themeToggle} onClick={toggleTheme}>
+            {theme === "light" ? "🌙" : "☀️"}
+          </button>
+          <button className={styles.logoutBtn} onClick={handleLogOut}>
+            Logout
+          </button>
+        </div>
       </header>
-      <div className={styles["ad-container"]}>
-        <div id="responsive-ad" className={styles["ad-slot"]}></div>
-      </div>
-      <div className={styles["posts-section"]}>
-        {filteredPosts.length === 0 ? (
-          <div className={styles["empty-state"]}>
-            <p className={styles["empty-text"]}>No posts found</p>
+
+      <main className={styles.mainContent}>
+        {loading ? (
+          <div className="universal-loader-container">
+            <div className="universal-loader"></div>
+            <p className="universal-loader-text">Discovering amazing content...</p>
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <div className={styles.emptyState}>
+            <span className={styles.emptyIcon}>📝</span>
+            <p>No posts found matching your criteria</p>
           </div>
         ) : (
-          <div className={styles["posts-grid"]}>
+          <div className={styles.postsGrid}>
             {filteredPosts.map((post) => (
               <Link
                 key={post._id}
                 to={`/post/${post._id}`}
-                onClick={() => handlePostClick(post._id)}
-                className={styles["post-card-link"]}
+                className={styles.postCardLink}
               >
-                <article className={styles["post-card"]}>
-                  <div className={styles["post-content"]}>
-                    <h3 className={styles["post-title"]}>{post.title}</h3>
-                    <p className={styles["post-excerpt"]}>{post.description}</p>
-                  </div>
-                  <div className={styles["post-footer"]}>
-                    <span className={styles["read-more"]}>Read More </span>
+                <article className={styles.postCard}>
+                  <div className={styles.imageContainer}>
+                    {/* Placeholder image since backend doesn't store images in standard setup, but you can replace src if it does */}
+                    <img 
+                      src={post.image || `https://source.unsplash.com/random/800x600?nature,technology,sig=${post._id}`} 
+                      alt={post.title} 
+                      className={styles.postImage} 
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80'; }}
+                    />
+                    
+                    <div className={styles.postOverlay}>
+                      <div className={styles.overlayContent}>
+                        <h3 className={styles.postTitle}>{post.title}</h3>
+                        <div className={styles.slidingContent}>
+                          <p className={styles.postExcerpt}>{post.description}</p>
+                          <span className={styles.readMore}>
+                            Read Full Article <span className={styles.arrow}>→</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </article>
               </Link>
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };
