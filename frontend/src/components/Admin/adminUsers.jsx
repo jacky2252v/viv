@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import "./styles/AdminUsers.css";
+import styles from "./styles/AdminUsers.module.css";
 
 const AdminUsers = () => {
   const navigate = useNavigate();
@@ -85,19 +85,19 @@ const AdminUsers = () => {
   );
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <button onClick={handleBack}>Back</button>
 
-      <main className="users-main">
+      <main className={styles["users-main"]}>
         {loading ? (
-          <div className="loading">Loading users...</div>
+          <div className={styles.loading}>Loading users...</div>
         ) : filteredUsers.length === 0 ? (
-          <div className="empty-state">
+          <div className={styles["empty-state"]}>
             <p>No users found</p>
           </div>
         ) : (
-          <div className="users-table-wrapper">
-            <table className="users-table">
+          <div className={styles["users-table-wrapper"]}>
+            <table className={styles["users-table"]}>
               <thead>
                 <tr>
                   <th>Name</th>
@@ -107,12 +107,12 @@ const AdminUsers = () => {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
-                  <tr key={user._id} className="user-row">
-                    <td className="user-name">{user.name}</td>
-                    <td className="user-email">{user.email}</td>
-                    <td className="user-actions">
+                  <tr key={user._id} className={styles["user-row"]}>
+                    <td className={styles["user-name"]}>{user.name}</td>
+                    <td className={styles["user-email"]}>{user.email}</td>
+                    <td className={styles["user-actions"]}>
                       <Popup
-                        trigger={<button className="edit-btn">Edit</button>}
+                        trigger={<button className={styles["edit-btn"]}>Edit</button>}
                         onOpen={() => {
                           setName(user.name);
                           setEmail(user.email);
@@ -121,7 +121,7 @@ const AdminUsers = () => {
                         nested
                       >
                         {(close) => (
-                          <div className="modal-content">
+                          <div className={styles["modal-content"]}>
                             <h2>Edit User</h2>
                             <form
                               onSubmit={(e) => {
@@ -130,7 +130,7 @@ const AdminUsers = () => {
                                 close();
                               }}
                             >
-                              <div className="form-group">
+                              <div className={styles["form-group"]}>
                                 <label>Name</label>
                                 <input
                                   type="text"
@@ -140,7 +140,7 @@ const AdminUsers = () => {
                                   required
                                 />
                               </div>
-                              <div className="form-group">
+                              <div className={styles["form-group"]}>
                                 <label>Email</label>
                                 <input
                                   type="email"
@@ -150,13 +150,13 @@ const AdminUsers = () => {
                                   required
                                 />
                               </div>
-                              <div className="form-actions">
-                                <button type="submit" className="save-btn">
+                              <div className={styles["form-actions"]}>
+                                <button type="submit" className={styles["save-btn"]}>
                                   Save Changes
                                 </button>
                                 <button
                                   type="button"
-                                  className="cancel-btn"
+                                  className={styles["cancel-btn"]}
                                   onClick={close}
                                 >
                                   Cancel
@@ -167,7 +167,7 @@ const AdminUsers = () => {
                         )}
                       </Popup>
                       <button
-                        className="delete-btn"
+                        className={styles["delete-btn"]}
                         onClick={() => handleDelete(user._id)}
                       >
                         Delete
@@ -181,7 +181,7 @@ const AdminUsers = () => {
         )}
       </main>
 
-      <footer className="users-footer">
+      <footer className={styles["users-footer"]}>
         <p>Total Users: {filteredUsers.length}</p>
       </footer>
     </div>

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "./styles/PostDetail.css";
+import styles from "./styles/PostDetail.module.css";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -69,22 +69,22 @@ const PostDetail = () => {
 
   if (loading) {
     return (
-      <div className="post-detail-container">
-        <div className="loader"></div>
-        <p className="loading-text">Loading post...</p>
+      <div className={styles["post-detail-container"]}>
+        <div className={styles.loader}></div>
+        <p className={styles["loading-text"]}>Loading post...</p>
       </div>
     );
   }
 
   if (!postData) {
     return (
-      <div className="post-detail-container">
-        <div className="error-state">
-          <h2 className="error-title">Post Not Found</h2>
-          <p className="error-message">
+      <div className={styles["post-detail-container"]}>
+        <div className={styles["error-state"]}>
+          <h2 className={styles["error-title"]}>Post Not Found</h2>
+          <p className={styles["error-message"]}>
             The post you&apos;re looking for doesn&apos;t exist.
           </p>
-          <button className="back-btn" onClick={handleBack}>
+          <button className={styles["back-btn"]} onClick={handleBack}>
             Back to Posts
           </button>
         </div>
@@ -93,23 +93,23 @@ const PostDetail = () => {
   }
 
   return (
-    <div className="container">
-      <header className="detail-header">
+    <div className={styles.container}>
+      <header className={styles["detail-header"]}>
         <button onClick={handleBack}>Back to Posts</button>
       </header>
-      <div className="ad-container">
-        <div id="responsive-ad" className="ad-slot"></div>
+      <div className={styles["ad-container"]}>
+        <div id="responsive-ad" className={styles["ad-slot"]}></div>
       </div>
 
-      <article className="post-detail">
-        <div className="post-detail-content">
-          <h1 className="post-title">{postData.title}</h1>
-          <div className="post-body">
-            <p className="post-description">{postData.description}</p>
+      <article className={styles["post-detail"]}>
+        <div className={styles["post-detail-content"]}>
+          <h1 className={styles["post-title"]}>{postData.title}</h1>
+          <div className={styles["post-body"]}>
+            <p className={styles["post-description"]}>{postData.description}</p>
           </div>
 
           {postData.content && (
-            <div className="post-full-content">{postData.content}</div>
+            <div className={styles["post-full-content"]}>{postData.content}</div>
           )}
         </div>
       </article>

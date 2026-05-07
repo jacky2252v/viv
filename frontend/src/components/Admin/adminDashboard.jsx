@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import "./styles/AdminDashboard.css";
+import styles from "./styles/AdminDashboard.module.css";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -10,35 +10,35 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <h1 className="dashboard-title">Admin Dashboard</h1>
-          <button className="logout-btn" onClick={handleLogOut}>
+    <div className={styles["dashboard-container"]}>
+      <header className={styles["dashboard-header"]}>
+        <div className={styles["header-content"]}>
+          <h1 className={styles["dashboard-title"]}>Admin Dashboard</h1>
+          <button className={styles["logout-btn"]} onClick={handleLogOut}>
             Logout
           </button>
         </div>
       </header>
 
-      <main className="dashboard-main">
-        <div className="dashboard-cards">
-          <Link to="/admin/users" className="dashboard-card users-card">
-            <h2 className="card-title">Manage Users</h2>
-            <p className="card-description">
+      <main className={styles["dashboard-main"]}>
+        <div className={styles["dashboard-cards"]}>
+          <Link to="/admin/users" className={`${styles["dashboard-card"]} ${styles["users-card"]}`}>
+            <h2 className={styles["card-title"]}>Manage Users</h2>
+            <p className={styles["card-description"]}>
               View and manage all users in the system
             </p>
-            <span className="card-action">Go to Users →</span>
+            <span className={styles["card-action"]}>Go to Users →</span>
           </Link>
 
-          <Link to="/admin/posts" className="dashboard-card posts-card">
-            <h2 className="card-title">Manage Posts</h2>
-            <p className="card-description">Create, edit, and delete posts</p>
-            <span className="card-action">Go to Posts →</span>
+          <Link to="/admin/posts" className={`${styles["dashboard-card"]} ${styles["posts-card"]}`}>
+            <h2 className={styles["card-title"]}>Manage Posts</h2>
+            <p className={styles["card-description"]}>Create, edit, and delete posts</p>
+            <span className={styles["card-action"]}>Go to Posts →</span>
           </Link>
         </div>
       </main>
 
-      <footer className="dashboard-footer">
+      <footer className={styles["dashboard-footer"]}>
         <p>&copy; 2024 Admin Panel. All rights reserved.</p>
       </footer>
     </div>

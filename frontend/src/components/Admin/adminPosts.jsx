@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import "./styles/AdminPosts.css";
+import styles from "./styles/AdminPosts.module.css";
 
 const AdminPosts = () => {
   const navigate = useNavigate();
@@ -118,11 +118,11 @@ const AdminPosts = () => {
   );
 
   return (
-    <div className="container">
-      <div className="header-right">
+    <div className={styles.container}>
+      <div className={styles["header-right"]}>
         <Popup trigger={<button> Create Post</button>} modal nested>
           {(close) => (
-            <div className="modal-content">
+            <div className={styles["modal-content"]}>
               <h2>Create New Post</h2>
               <form
                 onSubmit={(e) => {
@@ -131,7 +131,7 @@ const AdminPosts = () => {
                   close();
                 }}
               >
-                <div className="form-group">
+                <div className={styles["form-group"]}>
                   <label>Title</label>
                   <input
                     type="text"
@@ -141,7 +141,7 @@ const AdminPosts = () => {
                     required
                   />
                 </div>
-                <div className="form-group">
+                <div className={styles["form-group"]}>
                   <label>Description</label>
                   <textarea
                     placeholder="Enter post description"
@@ -151,11 +151,11 @@ const AdminPosts = () => {
                     rows="5"
                   ></textarea>
                 </div>
-                <div className="form-actions">
-                  <button type="submit" className="save-btn">
+                <div className={styles["form-actions"]}>
+                  <button type="submit" className={styles["save-btn"]}>
                     Create Post
                   </button>
-                  <button type="button" className="cancel-btn" onClick={close}>
+                  <button type="button" className={styles["cancel-btn"]} onClick={close}>
                     Cancel
                   </button>
                 </div>
@@ -166,24 +166,24 @@ const AdminPosts = () => {
         <button onClick={handleBack}>Back</button>
       </div>
 
-      <main className="posts-main">
+      <main className={styles["posts-main"]}>
         {loading ? (
-          <div className="loading">Loading posts...</div>
+          <div className={styles.loading}>Loading posts...</div>
         ) : filteredPosts.length === 0 ? (
-          <div className="empty-state">
+          <div className={styles["empty-state"]}>
             <p>No posts found</p>
           </div>
         ) : (
-          <div className="posts-grid">
+          <div className={styles["posts-grid"]}>
             {filteredPosts.map((post) => (
-              <div key={post._id} className="post-card">
-                <div className="post-header">
-                  <h3 className="post-title">{post.title}</h3>
+              <div key={post._id} className={styles["post-card"]}>
+                <div className={styles["post-header"]}>
+                  <h3 className={styles["post-title"]}>{post.title}</h3>
                 </div>
-                <p className="post-description">{post.description}</p>
-                <div className="post-actions">
+                <p className={styles["post-description"]}>{post.description}</p>
+                <div className={styles["post-actions"]}>
                   <Popup
-                    trigger={<button className="edit-btn">Edit</button>}
+                    trigger={<button className={styles["edit-btn"]}>Edit</button>}
                     onOpen={() => {
                       setTitle(post.title);
                       setDescription(post.description);
@@ -192,7 +192,7 @@ const AdminPosts = () => {
                     nested
                   >
                     {(close) => (
-                      <div className="modal-content">
+                      <div className={styles["modal-content"]}>
                         <h2>Edit Post</h2>
                         <form
                           onSubmit={(e) => {
@@ -201,7 +201,7 @@ const AdminPosts = () => {
                             close();
                           }}
                         >
-                          <div className="form-group">
+                          <div className={styles["form-group"]}>
                             <label>Title</label>
                             <input
                               type="text"
@@ -211,7 +211,7 @@ const AdminPosts = () => {
                               required
                             />
                           </div>
-                          <div className="form-group">
+                          <div className={styles["form-group"]}>
                             <label>Description</label>
                             <textarea
                               placeholder="Enter post description"
@@ -221,13 +221,13 @@ const AdminPosts = () => {
                               rows="5"
                             ></textarea>
                           </div>
-                          <div className="form-actions">
-                            <button type="submit" className="save-btn">
+                          <div className={styles["form-actions"]}>
+                            <button type="submit" className={styles["save-btn"]}>
                               Update Post
                             </button>
                             <button
                               type="button"
-                              className="cancel-btn"
+                              className={styles["cancel-btn"]}
                               onClick={close}
                             >
                               Cancel
@@ -238,7 +238,7 @@ const AdminPosts = () => {
                     )}
                   </Popup>
                   <button
-                    className="delete-btn"
+                    className={styles["delete-btn"]}
                     onClick={() => handleDelete(post._id)}
                   >
                     Delete
@@ -250,7 +250,7 @@ const AdminPosts = () => {
         )}
       </main>
 
-      <footer className="posts-footer">
+      <footer className={styles["posts-footer"]}>
         <p>Total Posts: {filteredPosts.length}</p>
       </footer>
     </div>

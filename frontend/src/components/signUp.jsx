@@ -1,3 +1,4 @@
+import styles from "./styles.module.css";
 import React from "react";
 import { useEffect } from "react";
 function SignUpForm() {
@@ -46,7 +47,7 @@ function SignUpForm() {
     };
 
     return (
-        <div className="form-container sign-up-container">
+        <div className={`${styles["form-container"]} ${styles["sign-up-container"]}`}>
             <form onSubmit={handleOnSubmit}>
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>

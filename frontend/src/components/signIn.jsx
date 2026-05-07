@@ -1,3 +1,4 @@
+import styles from "./styles.module.css";
 import React from "react";
 import { useNavigate } from "react-router";
 function SignInForm() {
@@ -57,7 +58,7 @@ function SignInForm() {
   };
 
   return (
-    <div className="form-container sign-in-container">
+    <div className={`${styles["form-container"]} ${styles["sign-in-container"]}`}>
       <form onSubmit={handleOnSubmit}>
         <h1>Sign in</h1>
         <span>or use your account</span>

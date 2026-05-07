@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import "./styles/PostLatest.css";
+import styles from "./styles/PostLatest.module.css";
 
 const PostLatest = () => {
   const navigate = useNavigate();
@@ -57,47 +57,47 @@ const PostLatest = () => {
 
   if (loading) {
     return (
-      <div className="post-latest-container">
-        <div className="loader"></div>
-        <p className="loading-text">Loading posts...</p>
+      <div className={styles["post-latest-container"]}>
+        <div className={styles.loader}></div>
+        <p className={styles["loading-text"]}>Loading posts...</p>
       </div>
     );
   }
 
   return (
-    <div className="container">
-      <header className="post-header">
-        <div className="header-content">
-          <h1 className="main-title">Latest Posts</h1>
+    <div className={styles.container}>
+      <header className={styles["post-header"]}>
+        <div className={styles["header-content"]}>
+          <h1 className={styles["main-title"]}>Latest Posts</h1>
         </div>
-        <button className="logout-btn" onClick={handleLogOut}>
+        <button className={styles["logout-btn"]} onClick={handleLogOut}>
           Logout
         </button>
       </header>
-      <div className="ad-container">
-        <div id="responsive-ad" className="ad-slot"></div>
+      <div className={styles["ad-container"]}>
+        <div id="responsive-ad" className={styles["ad-slot"]}></div>
       </div>
-      <div className="posts-section">
+      <div className={styles["posts-section"]}>
         {filteredPosts.length === 0 ? (
-          <div className="empty-state">
-            <p className="empty-text">No posts found</p>
+          <div className={styles["empty-state"]}>
+            <p className={styles["empty-text"]}>No posts found</p>
           </div>
         ) : (
-          <div className="posts-grid">
+          <div className={styles["posts-grid"]}>
             {filteredPosts.map((post) => (
               <Link
                 key={post._id}
                 to={`/post/${post._id}`}
                 onClick={() => handlePostClick(post._id)}
-                className="post-card-link"
+                className={styles["post-card-link"]}
               >
-                <article className="post-card">
-                  <div className="post-content">
-                    <h3 className="post-title">{post.title}</h3>
-                    <p className="post-excerpt">{post.description}</p>
+                <article className={styles["post-card"]}>
+                  <div className={styles["post-content"]}>
+                    <h3 className={styles["post-title"]}>{post.title}</h3>
+                    <p className={styles["post-excerpt"]}>{post.description}</p>
                   </div>
-                  <div className="post-footer">
-                    <span className="read-more">Read More </span>
+                  <div className={styles["post-footer"]}>
+                    <span className={styles["read-more"]}>Read More </span>
                   </div>
                 </article>
               </Link>
