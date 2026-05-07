@@ -8,6 +8,8 @@ const PostLatest = () => {
   const [postData, setPostData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [showTopBtn, setShowTopBtn] = useState(false);
   const location = useLocation();
   const isAdminView = new URLSearchParams(location.search).get("adminView") === "true";
 
@@ -38,6 +40,22 @@ const PostLatest = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleLogOut = (evt) => {
     evt.preventDefault();
@@ -115,6 +133,78 @@ const PostLatest = () => {
           </div>
         ) : filteredPosts.length === 0 ? (
           <div className={styles.emptyState}>No news articles found.</div>
+        ) : selectedPost ? (
+          <div className={styles.newsDetailLayout}>
+             {/* Main Article Column */}
+             <div className={styles.newsDetailMain}>
+                <div className={styles.breadcrumbMock} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span>Home » News » {selectedPost.title.substring(0, 20)}...</span>
+                  <button 
+                    onClick={() => setSelectedPost(null)} 
+                    style={{background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: 'bold', padding: '0.3rem 0.8rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem'}}
+                  >
+                     ← Back
+                  </button>
+                </div>
+                <h1 className={styles.newsDetailTitle}>{selectedPost.title}</h1>
+                <h2 className={styles.newsDetailExcerpt}>{selectedPost.description}</h2>
+                
+                <div className={styles.newsDetailMeta}>
+                  <div className={styles.metaLeft}>
+                    <div className={styles.authorAvatar}>ND</div>
+                    <div className={styles.authorInfo}>
+                       <span className={styles.authorName}>By: <strong>News Desk</strong></span>
+                       <span className={styles.dateTag}>Published: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</span>
+                    </div>
+                  </div>
+                  <div className={styles.metaRight}>
+                     <button className={styles.shareBtn}>FB</button>
+                     <button className={styles.shareBtn}>X</button>
+                     <button className={styles.shareBtn}>WA</button>
+                  </div>
+                </div>
+
+                <div className={styles.newsDetailImageWrapper}>
+                   <img 
+                     src={selectedPost.image || `https://source.unsplash.com/random/1000x500?news,sig=${selectedPost._id}`} 
+                     alt={selectedPost.title} 
+                     className={styles.newsDetailImage}
+                   />
+                   <span className={styles.imageCaption}>File photo representing the latest updates on the story. (Image: Unsplash)</span>
+                </div>
+
+                <div className={styles.newsDetailContent}>
+                  <p>
+                     <strong>New Delhi:</strong> {selectedPost.content || "No extended content provided for this post. News18 style articles typically feature multiple paragraphs of in-depth reporting, quotes from official sources, and embedded media. This is a placeholder demonstrating the typography and line-spacing of the main article body."}
+                  </p>
+                  <p>
+                    Authorities have stated that they are closely monitoring the situation. Representatives from various sectors have voiced their opinions, urging the public to remain calm while investigations continue.
+                  </p>
+                  <p>
+                    In a related development, market experts predict that the fallout from these events may influence short-term economic policies. "We are looking at a volatile week ahead," an analyst remarked during a press briefing earlier today.
+                  </p>
+                </div>
+             </div>
+
+             {/* Right Sidebar Column */}
+             <aside className={styles.newsDetailSidebar}>
+                <div className={styles.sidebarAdRect}>Advertisement</div>
+                
+                <div className={styles.sidebarWidget}>
+                  <h3 className={styles.widgetTitle}>More News</h3>
+                  <div className={styles.trendingList}>
+                    {topStories.map((post, index) => (
+                      <div key={post._id} onClick={() => { window.scrollTo(0, 0); setSelectedPost(post); }} className={styles.trendingItem} style={{cursor: 'pointer'}}>
+                        <span className={styles.trendingRank}>{index + 1}</span>
+                        <div className={styles.trendingContent}>
+                          <h4>{post.title}</h4>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+             </aside>
+          </div>
         ) : (
           <div className={styles.newsGrid}>
             {/* Left Column: Featured & Grid */}
@@ -122,7 +212,7 @@ const PostLatest = () => {
               
               {/* Featured Post (Hero) */}
               {featuredPost && (
-                <Link to={`/post/${featuredPost._id}${isAdminView ? "?adminView=true" : ""}`} className={styles.featuredPostLink}>
+                <div onClick={() => setSelectedPost(featuredPost)} className={styles.featuredPostLink} style={{cursor: 'pointer'}}>
                   <article className={styles.featuredPost}>
                     <img 
                       src={featuredPost.image || `https://source.unsplash.com/random/800x500?news,breaking,sig=${featuredPost._id}`}
@@ -135,7 +225,7 @@ const PostLatest = () => {
                       <p>{featuredPost.description}</p>
                     </div>
                   </article>
-                </Link>
+                </div>
               )}
 
               <div className={styles.sectionDivider}></div>
@@ -144,7 +234,7 @@ const PostLatest = () => {
               {/* Regular Posts Grid */}
               <div className={styles.regularGrid}>
                 {regularPosts.map((post) => (
-                  <Link key={post._id} to={`/post/${post._id}${isAdminView ? "?adminView=true" : ""}`} className={styles.cardLink}>
+                  <div key={post._id} onClick={() => setSelectedPost(post)} className={styles.cardLink} style={{cursor: 'pointer'}}>
                     <article className={styles.newsCard}>
                       <img 
                         src={post.image || `https://source.unsplash.com/random/400x300?news,sig=${post._id}`}
@@ -155,7 +245,7 @@ const PostLatest = () => {
                         <span className={styles.readMore}>Read More</span>
                       </div>
                     </article>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -166,12 +256,12 @@ const PostLatest = () => {
                 <h3 className={styles.widgetTitle}>Trending Stories</h3>
                 <div className={styles.trendingList}>
                   {topStories.map((post, index) => (
-                    <Link key={post._id} to={`/post/${post._id}${isAdminView ? "?adminView=true" : ""}`} className={styles.trendingItem}>
+                    <div key={post._id} onClick={() => setSelectedPost(post)} className={styles.trendingItem} style={{cursor: 'pointer'}}>
                       <span className={styles.trendingRank}>{index + 1}</span>
                       <div className={styles.trendingContent}>
                         <h4>{post.title}</h4>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -183,6 +273,13 @@ const PostLatest = () => {
           </div>
         )}
       </main>
+
+      {/* Floating Scroll to Top Button */}
+      {showTopBtn && (
+        <button className={styles.scrollToTopBtn} onClick={scrollToTop} aria-label="Scroll to top">
+          ↑ Top
+        </button>
+      )}
     </div>
   );
 };
