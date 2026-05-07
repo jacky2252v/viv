@@ -56,17 +56,38 @@ button {
   padding: 12px 45px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  transition: transform 80ms ease-in, box-shadow 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: width 0.3s ease;
+  z-index: -1;
+}
+
+button:hover::before {
+  width: 100%;
 }
 
 button:hover {
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 button:active {
-  transform: scale(0.95);
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 button:focus {
@@ -76,6 +97,16 @@ button:focus {
 button.ghost {
   background-color: transparent;
   border-color: #ffffff;
+}
+
+button.ghost:hover {
+  background-color: #ffffff;
+  color: var(--text-primary);
+  border-color: #ffffff;
+}
+
+button.ghost::before {
+  display: none;
 }
 
 form {

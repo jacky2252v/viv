@@ -111,24 +111,6 @@ const AdminDashboard = () => {
         </section>
       )}
 
-      <section className={styles.actionsSection}>
-          <h2 className={styles.sectionTitle}>Quick Actions</h2>
-          <div className={styles.dashboardCards}>
-          <Link to="/admin/users" className={`${styles.dashboardCard} glass-panel`}>
-            <h2 className={styles.cardTitle}>Manage Users</h2>
-            <p className={styles.cardDescription}>
-              View and manage all users in the system. Search, filter, edit, and delete user profiles.
-            </p>
-            <span className={styles.cardAction}>Go to Users →</span>
-          </Link>
-
-          <Link to="/admin/posts" className={`${styles.dashboardCard} glass-panel`}>
-            <h2 className={styles.cardTitle}>Manage Posts</h2>
-            <p className={styles.cardDescription}>Review formatting via Preview, edit content, and track published posts.</p>
-            <span className={styles.cardAction}>Go to Posts →</span>
-          </Link>
-        </div>
-      </section>
     </div>
   );
 };

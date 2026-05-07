@@ -15,7 +15,6 @@ export default function Hero() {
     `${styles.container} ${type === "signUp" ? styles["right-panel-active"] : ""}`;
   return (
     <div className={styles.App}>
-      <h2>Sign in/up Form</h2>
       <div className={containerClass} id="container">
         <SignUpForm />
         <SignInForm />
