@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./styles/PostDetail.module.css";
 
@@ -7,6 +7,8 @@ const PostDetail = () => {
   const [postData, setPostData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isAdminView = new URLSearchParams(location.search).get("adminView") === "true";
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`)
@@ -23,7 +25,7 @@ const PostDetail = () => {
 
   const handleBack = (evt) => {
     evt.preventDefault();
-    navigate("/post");
+    navigate(isAdminView ? "/post?adminView=true" : "/post");
   };
 
   if (loading) {
@@ -54,6 +56,22 @@ const PostDetail = () => {
 
   return (
     <div className={styles.container}>
+      {isAdminView && (
+        <div className={styles.adminPreviewBar}>
+          <div className={styles.adminPreviewLeft}>
+            <span className={styles.adminPreviewBadge}>Admin Preview Mode</span>
+          </div>
+          <div className={styles.adminPreviewCenter}>
+            <button className={styles.adminEditBtn}>✏️ Edit Site (Coming Soon)</button>
+          </div>
+          <div className={styles.adminPreviewRight}>
+            <button className={styles.adminBackBtn} onClick={() => navigate("/admin")}>
+              ⬅ Back to Admin
+            </button>
+          </div>
+        </div>
+      )}
+
       <header className={styles.detailHeader}>
         <div className={styles.headerContent}>
           <button className={styles.backBtn} onClick={handleBack}>

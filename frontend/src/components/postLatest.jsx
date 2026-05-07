@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import styles from "./styles/PostLatest.module.css";
@@ -8,6 +8,9 @@ const PostLatest = () => {
   const [postData, setPostData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const location = useLocation();
+  const isAdminView = new URLSearchParams(location.search).get("adminView") === "true";
+
   const [theme, setTheme] = useState(
     () => localStorage.getItem("theme") || 
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
@@ -53,6 +56,22 @@ const PostLatest = () => {
 
   return (
     <div className={styles.newsContainer}>
+      {isAdminView && (
+        <div className={styles.adminPreviewBar}>
+          <div className={styles.adminPreviewLeft}>
+            <span className={styles.adminPreviewBadge}>Admin Preview Mode</span>
+          </div>
+          <div className={styles.adminPreviewCenter}>
+            <button className={styles.adminEditBtn}>✏️ Edit Site (Coming Soon)</button>
+          </div>
+          <div className={styles.adminPreviewRight}>
+            <button className={styles.adminBackBtn} onClick={() => navigate("/admin")}>
+              ⬅ Back to Admin
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Top Header Navigation */}
       <header className={styles.newsHeader}>
         <div className={styles.headerTop}>
@@ -71,7 +90,9 @@ const PostLatest = () => {
             <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
               {theme === "light" ? "🌙" : "☀️"}
             </button>
-            <button className={styles.logoutBtn} onClick={handleLogOut}>Logout</button>
+            <button className={styles.logoutBtn} onClick={handleLogOut} disabled={isAdminView} style={isAdminView ? {opacity: 0.5, cursor: 'not-allowed'} : {}}>
+              Logout
+            </button>
           </div>
         </div>
         <nav className={styles.navMenu}>
@@ -82,7 +103,6 @@ const PostLatest = () => {
             <li>Technology</li>
             <li>Politics</li>
             <li>Entertainment</li>
-            <li><Link to="/admin" style={{color: 'inherit', textDecoration: 'none'}}>Admin</Link></li>
           </ul>
         </nav>
       </header>
@@ -102,7 +122,7 @@ const PostLatest = () => {
               
               {/* Featured Post (Hero) */}
               {featuredPost && (
-                <Link to={`/post/${featuredPost._id}`} className={styles.featuredPostLink}>
+                <Link to={`/post/${featuredPost._id}${isAdminView ? "?adminView=true" : ""}`} className={styles.featuredPostLink}>
                   <article className={styles.featuredPost}>
                     <img 
                       src={featuredPost.image || `https://source.unsplash.com/random/800x500?news,breaking,sig=${featuredPost._id}`}
@@ -124,7 +144,7 @@ const PostLatest = () => {
               {/* Regular Posts Grid */}
               <div className={styles.regularGrid}>
                 {regularPosts.map((post) => (
-                  <Link key={post._id} to={`/post/${post._id}`} className={styles.cardLink}>
+                  <Link key={post._id} to={`/post/${post._id}${isAdminView ? "?adminView=true" : ""}`} className={styles.cardLink}>
                     <article className={styles.newsCard}>
                       <img 
                         src={post.image || `https://source.unsplash.com/random/400x300?news,sig=${post._id}`}
@@ -146,7 +166,7 @@ const PostLatest = () => {
                 <h3 className={styles.widgetTitle}>Trending Stories</h3>
                 <div className={styles.trendingList}>
                   {topStories.map((post, index) => (
-                    <Link key={post._id} to={`/post/${post._id}`} className={styles.trendingItem}>
+                    <Link key={post._id} to={`/post/${post._id}${isAdminView ? "?adminView=true" : ""}`} className={styles.trendingItem}>
                       <span className={styles.trendingRank}>{index + 1}</span>
                       <div className={styles.trendingContent}>
                         <h4>{post.title}</h4>

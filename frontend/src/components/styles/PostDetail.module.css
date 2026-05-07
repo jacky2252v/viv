@@ -5,6 +5,59 @@
   background: var(--bg-primary);
 }
 
+/* Admin Preview Bar */
+.adminPreviewBar {
+  background: linear-gradient(90deg, #1e293b, #0f172a);
+  color: white;
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.adminPreviewBadge {
+  background: var(--accent-color);
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.adminEditBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.adminEditBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-style: solid;
+}
+
+.adminBackBtn {
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.adminBackBtn:hover {
+  background: #b71c1c;
+}
+
 .detailHeader {
   position: sticky;
   top: 0;

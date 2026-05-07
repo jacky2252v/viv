@@ -59,7 +59,7 @@ const AdminLayout = () => {
               </Link>
             </li>
             <li>
-              <Link to="/post">
+              <Link to="/post?adminView=true">
                 🌐 View Site
               </Link>
             </li>
