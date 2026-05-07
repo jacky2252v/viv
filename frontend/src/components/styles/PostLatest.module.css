@@ -1,259 +1,328 @@
-.container {
+.newsContainer {
+  background-color: var(--bg-secondary);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 5%;
-  background: var(--bg-secondary);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+/* Header & Nav */
+.newsHeader {
+  background-color: var(--header-bg);
+  border-bottom: 2px solid var(--accent-color);
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid var(--border-color);
-  animation: slideDown 0.5s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.headerLeft {
+.headerTop {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 1rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.mainTitle {
-  font-size: 1.8rem;
-  font-weight: 800;
+.logo {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin: 0;
   color: var(--text-primary);
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-.headerRight {
+.accentText {
+  color: var(--accent-color);
+}
+
+.headerControls {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.searchWrapper {
-  position: relative;
-}
-
-.searchInput {
-  padding: 0.6rem 1.2rem;
-  border-radius: 20px;
+.searchBox input {
+  padding: 0.5rem 1rem;
   border: 1px solid var(--border-color);
-  background: var(--bg-primary);
+  border-radius: 4px;
+  background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: 0.9rem;
   width: 200px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s;
 }
 
-.searchInput:focus {
-  outline: none;
-  width: 250px;
+.searchBox input:focus {
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
 }
 
-.themeToggle {
+.iconBtn {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
-}
-
-.themeToggle:hover {
-  transform: rotate(30deg);
-  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .logoutBtn {
-  background: var(--bg-primary);
-  color: var(--danger-color);
+  background: transparent;
+  color: var(--text-primary);
   border: 1px solid var(--border-color);
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: bold;
 }
 
 .logoutBtn:hover {
-  background: var(--danger-color);
-  color: white;
-  border-color: var(--danger-color);
-}
-
-.mainContent {
-  flex: 1;
-  padding: 3rem 5%;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 5rem 2rem;
-  color: var(--text-secondary);
-  font-size: 1.2rem;
-  animation: fadeIn 0.5s ease;
-}
-
-.emptyIcon {
-  font-size: 4rem;
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.postsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2.5rem;
-  animation: fadeIn 0.8s ease;
-}
-
-.postCardLink {
-  text-decoration: none;
-  display: block;
-  perspective: 1000px;
-}
-
-/* User's specific card animation requirement: 
-"show text and read more over post image and on hover zoom the grid and slide text and read more below." */
-.postCard {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  height: 380px;
-  box-shadow: var(--card-shadow);
-  transform-style: preserve-3d;
   background: var(--bg-secondary);
 }
 
-.imageContainer {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 16px;
+.navMenu {
+  background-color: var(--accent-color);
 }
 
-.postImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.postCard:hover .postImage {
-  transform: scale(1.1);
-}
-
-.postOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+.navMenu ul {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 2rem;
-  transition: all 0.5s ease;
-  z-index: 2;
+  list-style: none;
+  padding: 0 5%;
+  margin: 0 auto;
+  max-width: 1400px;
+  overflow-x: auto;
 }
 
-.overlayContent {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.postTitle {
-  color: #ffffff;
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 1rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  transform: translateY(30px);
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* On hover, slide the title UP to make room for sliding content BELOW it */
-.postCard:hover .postTitle {
-  transform: translateY(-20px);
-}
-
-/* Sliding content initially hidden below the visible bounding box of the title */
-.slidingContent {
-  position: absolute;
-  bottom: -40px; /* Initially pushed down */
-  left: 0;
-  width: 100%;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.postCard:hover .slidingContent {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.postExcerpt {
-  color: #e2e8f0;
+.navMenu li {
+  padding: 0.8rem 1.5rem;
+  color: #fff;
+  font-weight: 600;
   font-size: 0.95rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.navMenu li:hover, .navMenu li.active {
+  background-color: var(--accent-hover);
+}
+
+/* Main Layout */
+.mainContent {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+/* Left Column */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.featuredPostLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.featuredPost {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.featuredImg {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.featuredContent {
+  padding: 1.5rem;
+  background: var(--bg-primary);
+}
+
+.categoryBadge {
+  background: var(--accent-color);
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
   margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.featuredContent h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.featuredContent p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.sectionDivider {
+  height: 4px;
+  background: var(--border-color);
+  margin: 2rem 0;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  border-left: 5px solid var(--accent-color);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.regularGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.newsCard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: box-shadow 0.3s;
+}
+
+.newsCard:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.newsCard img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardContent h4 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
 .readMore {
-  display: inline-flex;
-  align-items: center;
+  font-size: 0.85rem;
+  font-weight: bold;
   color: var(--accent-color);
-  font-weight: 700;
-  font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-.arrow {
-  margin-left: 8px;
-  transition: transform 0.3s ease;
+/* Right Sidebar */
+.rightSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.postCard:hover .arrow {
-  transform: translateX(5px);
+.sidebarWidget {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
 }
 
-@keyframes slideDown {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
+.widgetTitle {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-primary);
+  display: inline-block;
+  border-bottom-color: var(--accent-color);
+}
+
+.trendingList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.trendingItem {
+  display: flex;
+  gap: 1rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.trendingItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.trendingRank {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--border-color);
+  line-height: 1;
+}
+
+.trendingContent h4 {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+  transition: color 0.3s;
+}
+
+.trendingItem:hover .trendingContent h4 {
+  color: var(--accent-color);
+}
+
+.sidebarAd {
+  height: 300px;
+  background: var(--border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border: 1px dashed var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .newsGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
-  .header {
+  .regularGrid {
+    grid-template-columns: 1fr;
+  }
+  .headerTop {
     flex-direction: column;
     gap: 1rem;
-  }
-  .headerRight {
-    width: 100%;
-    justify-content: space-between;
-  }
-  .searchInput {
-    width: 100%;
   }
 }

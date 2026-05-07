@@ -26,7 +26,8 @@ const PostLatest = () => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`)
       .then((response) => response.json())
       .then((data) => {
-        setPostData(data);
+        // Reverse to show latest first
+        setPostData(data.reverse());
         setLoading(false);
       })
       .catch((error) => {
@@ -46,75 +47,119 @@ const PostLatest = () => {
       post.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const featuredPost = filteredPosts.length > 0 ? filteredPosts[0] : null;
+  const topStories = filteredPosts.slice(1, 4);
+  const regularPosts = filteredPosts.slice(4);
+
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <h1 className={styles.mainTitle}>Latest Posts</h1>
-        </div>
-        <div className={styles.headerRight}>
-          <div className={styles.searchWrapper}>
-             <input 
-               type="text" 
-               className={styles.searchInput}
-               placeholder="Search articles..."
-               value={searchTerm}
-               onChange={(e) => setSearchTerm(e.target.value)}
-             />
+    <div className={styles.newsContainer}>
+      {/* Top Header Navigation */}
+      <header className={styles.newsHeader}>
+        <div className={styles.headerTop}>
+          <div className={styles.logoArea}>
+             <h1 className={styles.logo}>NEWS<span className={styles.accentText}>PLATFORM</span></h1>
           </div>
-          <button className={styles.themeToggle} onClick={toggleTheme}>
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
-          <button className={styles.logoutBtn} onClick={handleLogOut}>
-            Logout
-          </button>
+          <div className={styles.headerControls}>
+            <div className={styles.searchBox}>
+              <input 
+                type="text" 
+                placeholder="Search news..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
+              {theme === "light" ? "🌙" : "☀️"}
+            </button>
+            <button className={styles.logoutBtn} onClick={handleLogOut}>Logout</button>
+          </div>
         </div>
+        <nav className={styles.navMenu}>
+          <ul>
+            <li className={styles.active}>Home</li>
+            <li>Latest</li>
+            <li>Trending</li>
+            <li>Technology</li>
+            <li>Politics</li>
+            <li>Entertainment</li>
+            <li><Link to="/admin" style={{color: 'inherit', textDecoration: 'none'}}>Admin</Link></li>
+          </ul>
+        </nav>
       </header>
 
       <main className={styles.mainContent}>
         {loading ? (
           <div className="universal-loader-container">
             <div className="universal-loader"></div>
-            <p className="universal-loader-text">Discovering amazing content...</p>
+            <p className="universal-loader-text">Loading latest news...</p>
           </div>
         ) : filteredPosts.length === 0 ? (
-          <div className={styles.emptyState}>
-            <span className={styles.emptyIcon}>📝</span>
-            <p>No posts found matching your criteria</p>
-          </div>
+          <div className={styles.emptyState}>No news articles found.</div>
         ) : (
-          <div className={styles.postsGrid}>
-            {filteredPosts.map((post) => (
-              <Link
-                key={post._id}
-                to={`/post/${post._id}`}
-                className={styles.postCardLink}
-              >
-                <article className={styles.postCard}>
-                  <div className={styles.imageContainer}>
-                    {/* Placeholder image since backend doesn't store images in standard setup, but you can replace src if it does */}
+          <div className={styles.newsGrid}>
+            {/* Left Column: Featured & Grid */}
+            <div className={styles.leftColumn}>
+              
+              {/* Featured Post (Hero) */}
+              {featuredPost && (
+                <Link to={`/post/${featuredPost._id}`} className={styles.featuredPostLink}>
+                  <article className={styles.featuredPost}>
                     <img 
-                      src={post.image || `https://source.unsplash.com/random/800x600?nature,technology,sig=${post._id}`} 
-                      alt={post.title} 
-                      className={styles.postImage} 
-                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80'; }}
+                      src={featuredPost.image || `https://source.unsplash.com/random/800x500?news,breaking,sig=${featuredPost._id}`}
+                      alt={featuredPost.title}
+                      className={styles.featuredImg}
                     />
-                    
-                    <div className={styles.postOverlay}>
-                      <div className={styles.overlayContent}>
-                        <h3 className={styles.postTitle}>{post.title}</h3>
-                        <div className={styles.slidingContent}>
-                          <p className={styles.postExcerpt}>{post.description}</p>
-                          <span className={styles.readMore}>
-                            Read Full Article <span className={styles.arrow}>→</span>
-                          </span>
-                        </div>
-                      </div>
+                    <div className={styles.featuredContent}>
+                      <span className={styles.categoryBadge}>Top Story</span>
+                      <h2>{featuredPost.title}</h2>
+                      <p>{featuredPost.description}</p>
                     </div>
-                  </div>
-                </article>
-              </Link>
-            ))}
+                  </article>
+                </Link>
+              )}
+
+              <div className={styles.sectionDivider}></div>
+              <h3 className={styles.sectionTitle}>More News</h3>
+
+              {/* Regular Posts Grid */}
+              <div className={styles.regularGrid}>
+                {regularPosts.map((post) => (
+                  <Link key={post._id} to={`/post/${post._id}`} className={styles.cardLink}>
+                    <article className={styles.newsCard}>
+                      <img 
+                        src={post.image || `https://source.unsplash.com/random/400x300?news,sig=${post._id}`}
+                        alt={post.title}
+                      />
+                      <div className={styles.cardContent}>
+                        <h4>{post.title}</h4>
+                        <span className={styles.readMore}>Read More</span>
+                      </div>
+                    </article>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Top Stories / Trending sidebar */}
+            <aside className={styles.rightSidebar}>
+              <div className={styles.sidebarWidget}>
+                <h3 className={styles.widgetTitle}>Trending Stories</h3>
+                <div className={styles.trendingList}>
+                  {topStories.map((post, index) => (
+                    <Link key={post._id} to={`/post/${post._id}`} className={styles.trendingItem}>
+                      <span className={styles.trendingRank}>{index + 1}</span>
+                      <div className={styles.trendingContent}>
+                        <h4>{post.title}</h4>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              
+              <div className={styles.sidebarAd}>
+                <span>Advertisement</span>
+              </div>
+            </aside>
           </div>
         )}
       </main>

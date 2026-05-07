@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import styles from "./styles/AdminPosts.module.css";
 
 const AdminPosts = () => {
-  const navigate = useNavigate();
+  const [postData, setPostData] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [postData, setPostData] = useState([]);
+  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
+  
+  // Pagination & Filtering state
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 5;
 
-  const handleBack = (evt) => {
-    evt.preventDefault();
-    navigate("/admin");
-  };
+  // Preview State
+  const [previewPost, setPreviewPost] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`)
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        if (!response.ok) throw new Error("response was not ok");
         return response.json();
       })
       .then((data) => {
-        setPostData(data || []);
+        setPostData(data.reverse()); // Latest first
         setLoading(false);
       })
       .catch((error) => {
-        console.error("error message", error);
+        console.error("error:", error);
         setLoading(false);
       });
   }, []);
@@ -40,17 +39,13 @@ const AdminPosts = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${id}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (response.ok) {
         setPostData(postData.filter((post) => post._id !== id));
-        console.log("Post deleted successfully");
       }
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -58,201 +53,236 @@ const AdminPosts = () => {
   };
 
   const handleCreate = async () => {
-    if (!title.trim() || !description.trim()) {
-      alert("Please fill in all fields");
-      return;
-    }
-
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: title,
-            description: description,
-          }),
-        },
-      );
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description, content }),
+      });
       const result = await response.json();
-      setPostData([...(postData || []), result]);
-      setTitle("");
-      setDescription("");
-      console.log("Success:", result);
+      setPostData([result, ...postData]);
+      setTitle(""); setDescription(""); setContent("");
     } catch (error) {
-      console.error("Error posting data:", error);
+      console.error("Error creating post:", error);
     }
   };
 
   const handleUpdate = async (id) => {
-    if (!title.trim() || !description.trim()) {
-      alert("Please fill in all fields");
-      return;
-    }
-
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/posts/${id}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: title,
-            description: description,
-          }),
-        },
-      );
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description, content }),
+      });
       const result = await response.json();
       setPostData(postData.map((post) => (post._id === id ? result : post)));
-      console.log("Success:", result);
     } catch (error) {
       console.error("Error updating data:", error);
     }
   };
 
+  const exportToCSV = () => {
+    const headers = ["ID", "Title", "Description"];
+    const csvContent = [
+      headers.join(","),
+      ...postData.map(p => `"${p._id}","${p.title?.replace(/"/g, '""')}","${p.description?.replace(/"/g, '""')}"`)
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "posts_export.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const filteredPosts = postData.filter(
     (post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.description.toLowerCase().includes(searchTerm.toLowerCase()),
+      post.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
   return (
     <div className={styles.container}>
-      <div className={styles["header-right"]}>
-        <Popup trigger={<button> Create Post</button>} modal nested>
-          {(close) => (
-            <div className={styles["modal-content"]}>
-              <h2>Create New Post</h2>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleCreate();
-                  close();
-                }}
-              >
-                <div className={styles["form-group"]}>
-                  <label>Title</label>
-                  <input
-                    type="text"
-                    placeholder="Enter post title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                  />
+      <header className={styles.tableHeader}>
+        <div className={styles.headerControls}>
+          <input
+            type="text"
+            placeholder="Search posts..."
+            className={styles.searchInput}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+          <div className={styles.actionButtons}>
+            <button className={styles.exportBtn} onClick={exportToCSV}>
+               📥 Export CSV
+            </button>
+            <Popup 
+              trigger={<button className={styles.createBtn}>➕ Create Post</button>} 
+              modal nested className="centered-modal"
+            >
+              {(close) => (
+                <div className={styles.modalContent}>
+                  <h2>Create New Post</h2>
+                  <form onSubmit={(e) => { e.preventDefault(); handleCreate(); close(); }}>
+                    <div className={styles.formGroup}>
+                      <label>Title</label>
+                      <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>Description</label>
+                      <textarea value={description} onChange={(e) => setDescription(e.target.value)} required rows="3" />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>Full Content</label>
+                      <textarea value={content} onChange={(e) => setContent(e.target.value)} rows="5" />
+                    </div>
+                    <div className={styles.formActions}>
+                      <button type="button" className={styles.cancelBtn} onClick={close}>Cancel</button>
+                      <button type="submit" className={styles.saveBtn}>🚀 Publish</button>
+                    </div>
+                  </form>
                 </div>
-                <div className={styles["form-group"]}>
-                  <label>Description</label>
-                  <textarea
-                    placeholder="Enter post description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                    rows="5"
-                  ></textarea>
-                </div>
-                <div className={styles["form-actions"]}>
-                  <button type="submit" className={styles["save-btn"]}>
-                    Create Post
-                  </button>
-                  <button type="button" className={styles["cancel-btn"]} onClick={close}>
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-        </Popup>
-        <button onClick={handleBack}>Back</button>
-      </div>
+              )}
+            </Popup>
+          </div>
+        </div>
+      </header>
 
-      <main className={styles["posts-main"]}>
+      <main className={styles.postsMain}>
         {loading ? (
-          <div className={styles.loading}>Loading posts...</div>
-        ) : filteredPosts.length === 0 ? (
-          <div className={styles["empty-state"]}>
-            <p>No posts found</p>
+          <div className="universal-loader-container">
+            <div className="universal-loader"></div>
+            <p className="universal-loader-text">Loading posts...</p>
+          </div>
+        ) : currentPosts.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No posts found matching "{searchTerm}"</p>
           </div>
         ) : (
-          <div className={styles["posts-grid"]}>
-            {filteredPosts.map((post) => (
-              <div key={post._id} className={styles["post-card"]}>
-                <div className={styles["post-header"]}>
-                  <h3 className={styles["post-title"]}>{post.title}</h3>
-                </div>
-                <p className={styles["post-description"]}>{post.description}</p>
-                <div className={styles["post-actions"]}>
-                  <Popup
-                    trigger={<button className={styles["edit-btn"]}>Edit</button>}
-                    onOpen={() => {
-                      setTitle(post.title);
-                      setDescription(post.description);
-                    }}
-                    modal
-                    nested
-                  >
-                    {(close) => (
-                      <div className={styles["modal-content"]}>
-                        <h2>Edit Post</h2>
-                        <form
-                          onSubmit={(e) => {
-                            e.preventDefault();
-                            handleUpdate(post._id);
-                            close();
-                          }}
-                        >
-                          <div className={styles["form-group"]}>
-                            <label>Title</label>
-                            <input
-                              type="text"
-                              placeholder="Enter post title"
-                              value={title}
-                              onChange={(e) => setTitle(e.target.value)}
-                              required
-                            />
+          <div className={styles.tableWrapper}>
+            <table className={styles.postsTable}>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Excerpt</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentPosts.map((post) => (
+                  <tr key={post._id} className={styles.postRow}>
+                    <td className={styles.postTitleCol}>{post.title}</td>
+                    <td className={styles.postDescCol}>{post.description}</td>
+                    <td className={styles.postActions}>
+                      
+                      <button className={styles.previewBtn} onClick={() => setPreviewPost(post)}>
+                        👁️ Preview
+                      </button>
+
+                      <Popup
+                        trigger={<button className={styles.editBtn}>✏️ Edit</button>}
+                        onOpen={() => {
+                          setTitle(post.title);
+                          setDescription(post.description);
+                          setContent(post.content || "");
+                        }}
+                        modal
+                        nested
+                        className="centered-modal"
+                      >
+                        {(close) => (
+                          <div className={styles.modalContent}>
+                            <h2>Edit Post</h2>
+                            <form onSubmit={(e) => { e.preventDefault(); handleUpdate(post._id); close(); }}>
+                              <div className={styles.formGroup}>
+                                <label>Title</label>
+                                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                              </div>
+                              <div className={styles.formGroup}>
+                                <label>Description</label>
+                                <textarea value={description} onChange={(e) => setDescription(e.target.value)} required rows="3" />
+                              </div>
+                              <div className={styles.formGroup}>
+                                <label>Full Content</label>
+                                <textarea value={content} onChange={(e) => setContent(e.target.value)} rows="5" />
+                              </div>
+                              <div className={styles.formActions}>
+                                <button type="button" className={styles.cancelBtn} onClick={close}>Cancel</button>
+                                <button type="submit" className={styles.saveBtn}>💾 Save</button>
+                              </div>
+                            </form>
                           </div>
-                          <div className={styles["form-group"]}>
-                            <label>Description</label>
-                            <textarea
-                              placeholder="Enter post description"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              required
-                              rows="5"
-                            ></textarea>
-                          </div>
-                          <div className={styles["form-actions"]}>
-                            <button type="submit" className={styles["save-btn"]}>
-                              Update Post
-                            </button>
-                            <button
-                              type="button"
-                              className={styles["cancel-btn"]}
-                              onClick={close}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    )}
-                  </Popup>
-                  <button
-                    className={styles["delete-btn"]}
-                    onClick={() => handleDelete(post._id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
+                        )}
+                      </Popup>
+                      <button className={styles.deleteBtn} onClick={() => handleDelete(post._id)}>
+                        🗑️ Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </main>
 
-      <footer className={styles["posts-footer"]}>
-        <p>Total Posts: {filteredPosts.length}</p>
-      </footer>
+      {!loading && filteredPosts.length > 0 && (
+        <footer className={styles.pagination}>
+           <span className={styles.pageInfo}>Showing {indexOfFirstPost + 1} to {Math.min(indexOfLastPost, filteredPosts.length)} of {filteredPosts.length}</span>
+           <div className={styles.pageControls}>
+             <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>Prev</button>
+             <span className={styles.pageNumber}>{currentPage} / {totalPages}</span>
+             <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>Next</button>
+           </div>
+        </footer>
+      )}
+
+      {/* Preview Modal overlay manually managed to ensure it acts like Client Side */}
+      {previewPost && (
+        <div className={styles.previewOverlay} onClick={() => setPreviewPost(null)}>
+           <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
+              <div className={styles.previewHeader}>
+                 <h3>Post Preview</h3>
+                 <button className={styles.closePreviewBtn} onClick={() => setPreviewPost(null)}>×</button>
+              </div>
+              <div className={styles.previewBody}>
+                  {/* Simulate the client side post view */}
+                  <h1 style={{fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--text-primary)'}}>{previewPost.title}</h1>
+                  <p style={{fontSize: '1.2rem', fontStyle: 'italic', borderLeft: '4px solid var(--accent-color)', paddingLeft: '1rem', color: 'var(--text-secondary)', marginBottom: '2rem'}}>
+                    {previewPost.description}
+                  </p>
+                  <img 
+                    src={previewPost.image || `https://source.unsplash.com/random/800x400?news,sig=${previewPost._id}`} 
+                    alt="Hero" 
+                    style={{width: '100%', height: '300px', objectFit: 'cover', borderRadius: '8px', marginBottom: '2rem'}}
+                  />
+                  <div style={{fontSize: '1.1rem', lineHeight: '1.6', color: 'var(--text-primary)'}}>
+                    {previewPost.content || "No extended content provided."}
+                  </div>
+              </div>
+           </div>
+        </div>
+      )}
+
+      <style>{`
+        .centered-modal-content {
+          margin: auto !important;
+          background: transparent !important;
+          border: none !important;
+          width: auto !important;
+          padding: 0 !important;
+        }
+      `}</style>
     </div>
   );
 };
