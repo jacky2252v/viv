@@ -96,6 +96,19 @@ const AdminUsers = () => {
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
+  // State for Edit Modal
+  const [editingUser, setEditingUser] = useState(null);
+
+  const openEditModal = (user) => {
+    setEditingUser(user);
+    setName(user.name);
+    setEmail(user.email);
+  };
+
+  const closeEditModal = () => {
+    setEditingUser(null);
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.tableHeader}>
@@ -138,57 +151,32 @@ const AdminUsers = () => {
               </thead>
               <tbody>
                 {currentUsers.map((user) => (
-                  <tr key={user._id} className={styles.userRow}>
+                  <tr 
+                    key={user._id} 
+                    className={styles.userRow}
+                    onClick={() => {
+                      if (window.innerWidth <= 768) openEditModal(user);
+                    }}
+                  >
                     <td className={styles.userName}>{user.name}</td>
                     <td className={styles.userEmail}>{user.email}</td>
                     <td className={styles.userActions}>
-                      <Popup
-                        trigger={<button className={styles.editBtn}>✏️ Edit</button>}
-                        onOpen={() => {
-                          setName(user.name);
-                          setEmail(user.email);
+                      <button 
+                        className={styles.editBtn} 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditModal(user);
                         }}
-                        modal
-                        nested
-                        className="centered-modal"
                       >
-                        {(close) => (
-                          <div className={styles.modalContent}>
-                            <h2>Edit User Profile</h2>
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                handleUpdate(user._id);
-                                close();
-                              }}
-                            >
-                              <div className={styles.formGroup}>
-                                <label>Full Name</label>
-                                <input
-                                  type="text"
-                                  value={name}
-                                  onChange={(e) => setName(e.target.value)}
-                                  required
-                                />
-                              </div>
-                              <div className={styles.formGroup}>
-                                <label>Email Address</label>
-                                <input
-                                  type="email"
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                                  required
-                                />
-                              </div>
-                              <div className={styles.formActions}>
-                                <button type="button" className={styles.cancelBtn} onClick={close}>Cancel</button>
-                                <button type="submit" className={styles.saveBtn}>💾 Save</button>
-                              </div>
-                            </form>
-                          </div>
-                        )}
-                      </Popup>
-                      <button className={styles.deleteBtn} onClick={() => handleDelete(user._id)}>
+                        ✏️ Edit
+                      </button>
+                      <button 
+                        className={styles.deleteBtn} 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(user._id);
+                        }}
+                      >
                         🗑️ Delete
                       </button>
                     </td>
@@ -199,6 +187,49 @@ const AdminUsers = () => {
           </div>
         )}
       </main>
+
+      {/* Global Edit Popup */}
+      <Popup
+        open={!!editingUser}
+        onClose={closeEditModal}
+        modal
+        nested
+        className="centered-modal"
+      >
+        <div className={styles.modalContent}>
+          <h2>Edit User Profile</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdate(editingUser._id);
+              closeEditModal();
+            }}
+          >
+            <div className={styles.formGroup}>
+              <label>Full Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className={styles.formActions}>
+              <button type="button" className={styles.cancelBtn} onClick={closeEditModal}>Cancel</button>
+              <button type="submit" className={styles.saveBtn}>💾 Save</button>
+            </div>
+          </form>
+        </div>
+      </Popup>
 
       {!loading && filteredUsers.length > 0 && (
         <footer className={styles.pagination}>

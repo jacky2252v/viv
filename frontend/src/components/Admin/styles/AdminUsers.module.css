@@ -95,6 +95,43 @@
   font-weight: 600;
 }
 
+@media (max-width: 768px) {
+  .headerControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .searchInput {
+    width: 100%;
+  }
+
+  .exportBtn {
+    width: 100%;
+  }
+
+  /* Hide Name column on mobile - show Email as primary */
+  .usersTable th:nth-child(1),
+  .usersTable td:nth-child(1) {
+    display: none;
+  }
+
+  /* Hide explicit Edit button on mobile */
+  .editBtn {
+    display: none;
+  }
+
+  .userEmail {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .userRow {
+    cursor: pointer;
+  }
+}
+
 .userActions {
   display: flex;
   gap: 0.8rem;

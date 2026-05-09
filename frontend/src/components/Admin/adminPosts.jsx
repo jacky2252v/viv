@@ -108,6 +108,20 @@ const AdminPosts = () => {
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
+  // State for Edit Modal
+  const [editingPost, setEditingPost] = useState(null);
+
+  const openEditModal = (post) => {
+    setEditingPost(post);
+    setTitle(post.title);
+    setDescription(post.description);
+    setContent(post.content || "");
+  };
+
+  const closeEditModal = () => {
+    setEditingPost(null);
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.tableHeader}>
@@ -180,51 +194,44 @@ const AdminPosts = () => {
               </thead>
               <tbody>
                 {currentPosts.map((post) => (
-                  <tr key={post._id} className={styles.postRow}>
+                  <tr 
+                    key={post._id} 
+                    className={styles.postRow}
+                    onClick={() => {
+                      if (window.innerWidth <= 768) setPreviewPost(post);
+                    }}
+                  >
                     <td className={styles.postTitleCol}>{post.title}</td>
                     <td className={styles.postDescCol}>{post.description}</td>
                     <td className={styles.postActions}>
                       
-                      <button className={styles.previewBtn} onClick={() => setPreviewPost(post)}>
+                      <button 
+                        className={styles.previewBtn} 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewPost(post);
+                        }}
+                      >
                         👁️ Preview
                       </button>
 
-                      <Popup
-                        trigger={<button className={styles.editBtn}>✏️ Edit</button>}
-                        onOpen={() => {
-                          setTitle(post.title);
-                          setDescription(post.description);
-                          setContent(post.content || "");
+                      <button 
+                        className={styles.editBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditModal(post);
                         }}
-                        modal
-                        nested
-                        className="centered-modal"
                       >
-                        {(close) => (
-                          <div className={styles.modalContent}>
-                            <h2>Edit Post</h2>
-                            <form onSubmit={(e) => { e.preventDefault(); handleUpdate(post._id); close(); }}>
-                              <div className={styles.formGroup}>
-                                <label>Title</label>
-                                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                              </div>
-                              <div className={styles.formGroup}>
-                                <label>Description</label>
-                                <textarea value={description} onChange={(e) => setDescription(e.target.value)} required rows="3" />
-                              </div>
-                              <div className={styles.formGroup}>
-                                <label>Full Content</label>
-                                <textarea value={content} onChange={(e) => setContent(e.target.value)} rows="5" />
-                              </div>
-                              <div className={styles.formActions}>
-                                <button type="button" className={styles.cancelBtn} onClick={close}>Cancel</button>
-                                <button type="submit" className={styles.saveBtn}>💾 Save</button>
-                              </div>
-                            </form>
-                          </div>
-                        )}
-                      </Popup>
-                      <button className={styles.deleteBtn} onClick={() => handleDelete(post._id)}>
+                        ✏️ Edit
+                      </button>
+
+                      <button 
+                        className={styles.deleteBtn} 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(post._id);
+                        }}
+                      >
                         🗑️ Delete
                       </button>
                     </td>
@@ -235,6 +242,37 @@ const AdminPosts = () => {
           </div>
         )}
       </main>
+
+      {/* Global Edit Modal */}
+      <Popup
+        open={!!editingPost}
+        onClose={closeEditModal}
+        modal
+        nested
+        className="centered-modal"
+      >
+        <div className={styles.modalContent}>
+          <h2>Edit Post</h2>
+          <form onSubmit={(e) => { e.preventDefault(); handleUpdate(editingPost._id); closeEditModal(); }}>
+            <div className={styles.formGroup}>
+              <label>Title</label>
+              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Description</label>
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} required rows="3" />
+            </div>
+            <div className={styles.formGroup}>
+              <label>Full Content</label>
+              <textarea value={content} onChange={(e) => setContent(e.target.value)} rows="5" />
+            </div>
+            <div className={styles.formActions}>
+              <button type="button" className={styles.cancelBtn} onClick={closeEditModal}>Cancel</button>
+              <button type="submit" className={styles.saveBtn}>💾 Save</button>
+            </div>
+          </form>
+        </div>
+      </Popup>
 
       {!loading && filteredPosts.length > 0 && (
         <footer className={styles.pagination}>
@@ -251,10 +289,22 @@ const AdminPosts = () => {
       {previewPost && (
         <div className={styles.previewOverlay} onClick={() => setPreviewPost(null)}>
            <div className={styles.previewModal} onClick={e => e.stopPropagation()}>
-              <div className={styles.previewHeader}>
-                 <h3>Post Preview</h3>
-                 <button className={styles.closePreviewBtn} onClick={() => setPreviewPost(null)}>×</button>
-              </div>
+               <div className={styles.previewHeader}>
+                  <h3>Post Preview</h3>
+                  <div style={{display: 'flex', gap: '1rem'}}>
+                    <button 
+                      className={styles.editBtn} 
+                      onClick={() => {
+                        openEditModal(previewPost);
+                        setPreviewPost(null);
+                      }}
+                      style={{display: 'block', background: 'var(--accent-color)', color: 'white', padding: '0.5rem 1rem'}}
+                    >
+                      ✏️ Edit Post
+                    </button>
+                    <button className={styles.closePreviewBtn} onClick={() => setPreviewPost(null)}>×</button>
+                  </div>
+               </div>
               <div className={styles.previewBody}>
                   {/* Simulate the client side post view */}
                   <h1 style={{fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--text-primary)'}}>{previewPost.title}</h1>

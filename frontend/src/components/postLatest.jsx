@@ -100,11 +100,14 @@ const PostLatest = () => {
                className={styles.mobileBurgerBtn} 
                onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
              >
-               ☰
+               {isMobileNavOpen ? "✕" : "☰"}
              </button>
           </div>
+
+          {/* Desktop/Tablet Header Elements (Hidden on mobile via CSS) */}
           <div className={`${styles.headerControls} ${isMobileNavOpen ? styles.open : ""}`}>
-            <nav className={styles.navMenu}>
+            {/* Mobile-Only Nav List inside the drawer */}
+            <nav className={styles.mobileNavMenu}>
               <ul>
                 <li className={styles.active} onClick={() => setIsMobileNavOpen(false)}>Home</li>
                 <li onClick={() => setIsMobileNavOpen(false)}>Latest</li>
@@ -114,6 +117,7 @@ const PostLatest = () => {
                 <li onClick={() => setIsMobileNavOpen(false)}>Entertainment</li>
               </ul>
             </nav>
+
             <div className={styles.searchBox}>
               <input 
                 type="text" 
@@ -122,6 +126,7 @@ const PostLatest = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+
             <div className={styles.headerActions}>
               <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
                 {theme === "light" ? "🌙 Dark" : "☀️ Light"}
@@ -132,6 +137,18 @@ const PostLatest = () => {
             </div>
           </div>
         </div>
+
+        {/* Desktop-Only Navigation Bar */}
+        <nav className={styles.navMenu}>
+          <ul>
+            <li className={styles.active}>Home</li>
+            <li>Latest</li>
+            <li>Trending</li>
+            <li>Technology</li>
+            <li>Politics</li>
+            <li>Entertainment</li>
+          </ul>
+        </nav>
       </header>
 
       <main className={styles.mainContent}>
