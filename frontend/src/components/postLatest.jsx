@@ -9,7 +9,6 @@ const PostLatest = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
-  const [showTopBtn, setShowTopBtn] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const location = useLocation();
   const isAdminView = new URLSearchParams(location.search).get("adminView") === "true";
@@ -41,22 +40,6 @@ const PostLatest = () => {
         setLoading(false);
       });
   }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 400) {
-        setShowTopBtn(true);
-      } else {
-        setShowTopBtn(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const handleLogOut = (evt) => {
     evt.preventDefault();
@@ -300,12 +283,6 @@ const PostLatest = () => {
         )}
       </main>
 
-      {/* Floating Scroll to Top Button */}
-      {showTopBtn && (
-        <button className={styles.scrollToTopBtn} onClick={scrollToTop} aria-label="Scroll to top">
-          ↑ Top
-        </button>
-      )}
     </div>
   );
 };

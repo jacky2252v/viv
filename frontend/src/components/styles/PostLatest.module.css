@@ -56,6 +56,48 @@
   background: #b71c1c;
 }
 
+.adminPreviewBar {
+  background: var(--accent-color);
+  color: white;
+  padding: 0.6rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 1001;
+}
+
+.adminEditBtn, .adminBackBtn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+}
+
+.adminEditBtn:hover, .adminBackBtn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+@media (max-width: 768px) {
+  .adminPreviewBar {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+  }
+  .adminPreviewLeft, .adminPreviewCenter, .adminPreviewRight {
+    width: 100%;
+  }
+  .adminEditBtn, .adminBackBtn {
+    width: 100%;
+  }
+}
+
 /* Header & Nav */
 .newsHeader {
   background-color: var(--header-bg);
@@ -272,8 +314,7 @@
   }
 
   .searchBox {
-    order: 0;
-    max-width: none;
+    display: none; /* Removed search from mobile view */
   }
 
   .headerActions {
