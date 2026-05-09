@@ -70,9 +70,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 5%;
+  padding: 1rem 5% 0 5%; /* adjusted padding to accommodate navMenu inside */
   max-width: 1400px;
   margin: 0 auto;
+  flex-wrap: wrap; /* allow elements to wrap */
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
@@ -87,7 +94,22 @@
   color: var(--accent-color);
 }
 
+.mobileBurgerBtn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
 .headerControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headerActions {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -132,13 +154,20 @@
 }
 
 .navMenu {
+  flex-basis: 100%;
+  order: 3;
+  width: 100%;
   background-color: var(--accent-color);
+  margin-top: 1rem;
+  margin-left: -5%; /* offset headerTop padding to make it full bleed */
+  margin-right: -5%;
+  padding: 0 5%;
 }
 
 .navMenu ul {
   display: flex;
   list-style: none;
-  padding: 0 5%;
+  padding: 0;
   margin: 0 auto;
   max-width: 1400px;
   overflow-x: auto;
@@ -155,6 +184,65 @@
 
 .navMenu li:hover, .navMenu li.active {
   background-color: var(--accent-hover);
+}
+
+/* Mobile Media Query Enhancements */
+@media (max-width: 768px) {
+  .headerTop {
+    padding-bottom: 1rem;
+  }
+
+  .logoArea {
+    width: 100%;
+  }
+
+  .mobileBurgerBtn {
+    display: block;
+  }
+
+  .headerControls {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  .headerControls.open {
+    display: flex;
+  }
+
+  .navMenu {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    order: unset;
+  }
+
+  .navMenu ul {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+
+  .navMenu li {
+    color: var(--text-primary);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .navMenu li:hover, .navMenu li.active {
+    background-color: transparent;
+    color: var(--accent-color);
+  }
+
+  .headerActions {
+    justify-content: space-between;
+  }
+
+  .searchBox {
+    order: -1; /* move search to top of menu */
+  }
 }
 
 /* Main Layout */

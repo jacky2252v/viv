@@ -335,3 +335,40 @@
   overflow-y: auto;
   padding: 3rem 10%;
 }
+
+@media (max-width: 768px) {
+  .headerControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .searchInput {
+    width: 100%;
+  }
+
+  .actionButtons {
+    justify-content: space-between;
+  }
+
+  .exportBtn, .createBtn {
+    flex: 1;
+  }
+
+  /* Hide Excerpt column on mobile */
+  .postsTable th:nth-child(2),
+  .postsTable td:nth-child(2) {
+    display: none;
+  }
+
+  /* Hide explicit Preview and Edit buttons on mobile */
+  .previewBtn, .editBtn {
+    display: none;
+  }
+
+  .postTitleCol {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

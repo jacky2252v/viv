@@ -196,6 +196,7 @@
 
   .mobileMenuBtn {
     display: block;
+    margin-right: 0.5rem;
   }
 
   .sidebarOverlay {
@@ -204,5 +205,10 @@
 
   .topbar {
     padding: 0 1rem;
+    justify-content: space-between;
+  }
+
+  .adminProfile span {
+    display: none;
   }
 }

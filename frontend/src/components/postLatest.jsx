@@ -10,6 +10,7 @@ const PostLatest = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
   const [showTopBtn, setShowTopBtn] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const location = useLocation();
   const isAdminView = new URLSearchParams(location.search).get("adminView") === "true";
 
@@ -95,8 +96,24 @@ const PostLatest = () => {
         <div className={styles.headerTop}>
           <div className={styles.logoArea}>
              <h1 className={styles.logo}>NEWS<span className={styles.accentText}>PLATFORM</span></h1>
+             <button 
+               className={styles.mobileBurgerBtn} 
+               onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+             >
+               ☰
+             </button>
           </div>
-          <div className={styles.headerControls}>
+          <div className={`${styles.headerControls} ${isMobileNavOpen ? styles.open : ""}`}>
+            <nav className={styles.navMenu}>
+              <ul>
+                <li className={styles.active} onClick={() => setIsMobileNavOpen(false)}>Home</li>
+                <li onClick={() => setIsMobileNavOpen(false)}>Latest</li>
+                <li onClick={() => setIsMobileNavOpen(false)}>Trending</li>
+                <li onClick={() => setIsMobileNavOpen(false)}>Technology</li>
+                <li onClick={() => setIsMobileNavOpen(false)}>Politics</li>
+                <li onClick={() => setIsMobileNavOpen(false)}>Entertainment</li>
+              </ul>
+            </nav>
             <div className={styles.searchBox}>
               <input 
                 type="text" 
@@ -105,24 +122,16 @@ const PostLatest = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
-              {theme === "light" ? "🌙" : "☀️"}
-            </button>
-            <button className={styles.logoutBtn} onClick={handleLogOut} disabled={isAdminView} style={isAdminView ? {opacity: 0.5, cursor: 'not-allowed'} : {}}>
-              Logout
-            </button>
+            <div className={styles.headerActions}>
+              <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
+                {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+              </button>
+              <button className={styles.logoutBtn} onClick={handleLogOut} disabled={isAdminView} style={isAdminView ? {opacity: 0.5, cursor: 'not-allowed'} : {}}>
+                Logout
+              </button>
+            </div>
           </div>
         </div>
-        <nav className={styles.navMenu}>
-          <ul>
-            <li className={styles.active}>Home</li>
-            <li>Latest</li>
-            <li>Trending</li>
-            <li>Technology</li>
-            <li>Politics</li>
-            <li>Entertainment</li>
-          </ul>
-        </nav>
       </header>
 
       <main className={styles.mainContent}>
